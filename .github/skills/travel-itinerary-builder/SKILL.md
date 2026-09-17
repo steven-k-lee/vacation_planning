@@ -1,16 +1,18 @@
 ---
 name: travel-itinerary-builder
-description: "Build or update a polished interactive travel itinerary from dates, locations, lodging, activities, routes, restaurants, and traveler needs. Use when asked to create a trip plan, road-trip app, vacation itinerary HTML, Google Maps links, restaurant listing photos, categorized KML map, packing list, or emergency guide for a new destination or new travel dates."
+description: "Build or update a polished interactive travel itinerary in an organized YYYYMM_Destination folder. Use when asked to create a trip plan, road-trip app, vacation itinerary HTML, Google Maps links, restaurant listing photos, categorized KML map, packing list, or emergency guide for a new destination or new travel dates."
 argument-hint: "Provide dates, travelers, origin, destinations, lodging, activities, transport, and any constraints"
 user-invocable: true
 disable-model-invocation: false
 ---
 
-# Travel Itinerary Builder
+# 🧭 Travel Itinerary Builder
 
-Create a practical, visually polished, offline-friendly travel package centered on an interactive HTML itinerary. When requested, also create a categorized KML map, packing list, or destination emergency guide.
+> ✨ Create a practical, visually polished, offline-friendly travel package centered on an interactive HTML itinerary.
 
-## Inputs
+When requested, also create a categorized KML map, packing list, destination emergency guide, assets, and reproducible helper scripts.
+
+## 📝 Inputs
 
 Gather these facts from the user's prompt and existing workspace files before asking questions:
 
@@ -26,7 +28,7 @@ Gather these facts from the user's prompt and existing workspace files before as
 
 Ask only for missing information that materially changes the itinerary. If details remain unknown, label assumptions and use editable placeholders instead of inventing reservations or confirmations.
 
-## Research Rules
+## 🔎 Research Rules
 
 1. Treat current workspace files and user-provided links as authoritative.
 2. Verify time-sensitive facts such as opening hours, seasonal closures, tolls, reservations, road restrictions, and transit schedules against official sources where possible.
@@ -35,15 +37,36 @@ Ask only for missing information that materially changes the itinerary. If detai
 5. Never silently substitute a similarly named business. If a match is ambiguous, ask the user or use a labeled placeholder.
 6. Record the access date for facts likely to change, and clearly distinguish estimates from verified information.
 
-## Workflow
+## 🗺️ Workflow
 
-### 1. Inspect Existing Material
+```mermaid
+flowchart TD
+	A[💬 Gather trip details] --> B[📁 Create YYYYMM_Destination]
+	B --> C[🔎 Inspect existing material]
+	C --> D[🗓️ Normalize the trip]
+	D --> E[🌐 Build requested artifacts]
+	E --> F[🧪 Validate content and behavior]
+	F --> G[📋 Report results]
+```
+
+### 1. 📁 Create the Trip Folder
+
+For a new trip, create one workspace-root folder before generating any files. Name it `YYYYMM_Destination`, using the trip's four-digit year and two-digit starting month, an underscore, and a concise destination name with spaces replaced by underscores. For example, an October 2026 Dolomites trip belongs in `202610_Dolomites/`.
+
+- Put every generated trip artifact inside this folder, including itinerary HTML, KML or KMZ files, packing lists, emergency guides, downloaded assets, and reproducible helper scripts.
+- Keep relative asset and script paths within the trip folder; do not scatter new trip files across the workspace root.
+- If the trip spans multiple months, use the starting month.
+- If the trip includes multiple stops, use the primary destination or a concise regional trip name.
+- When updating an existing trip, reuse its current trip folder unless the user explicitly requests a rename or separate version.
+- Do not overwrite another trip's folder. If the computed name belongs to a different trip, ask for a distinguishing destination name.
+
+### 2. 🔍 Inspect Existing Material
 
 - Identify the controlling files, nearby styles, scripts, existing route links, and current design conventions.
 - Extract structured trip facts with targeted searches. Avoid broad reads of HTML lines containing embedded base64 images.
 - Preserve user edits and reuse established components before adding new abstractions.
 
-### 2. Normalize the Trip
+### 3. 🗓️ Normalize the Trip
 
 Build an internal day-by-day table containing:
 
@@ -59,7 +82,7 @@ Build an internal day-by-day table containing:
 
 Check chronology, travel time, check-in constraints, seasonal daylight, and opening hours. Surface conflicts rather than hiding them.
 
-### 3. Build the Itinerary HTML
+### 4. 🌐 Build the Itinerary HTML
 
 Create the actual itinerary as the first screen, not a marketing page. Include:
 
@@ -73,7 +96,7 @@ Create the actual itinerary as the first screen, not a marketing page. Include:
 
 Keep operational travel information easy to scan. Use restrained cards only for repeated items such as restaurant entries.
 
-### 4. Add Restaurant Entries
+### 5. 🍽️ Add Restaurant Entries
 
 For each restaurant, include:
 
@@ -96,7 +119,7 @@ Restaurant thumbnails must:
 
 The remainder of the restaurant card may open its Google Maps listing. Keep the restaurant name as a normal anchor.
 
-### 5. Add the Lightbox
+### 6. 🖼️ Add the Lightbox
 
 Reuse an existing lightbox when available. Otherwise add one modal shared by itinerary and restaurant images.
 
@@ -107,7 +130,7 @@ Reuse an existing lightbox when available. Otherwise add one modal shared by iti
 - Restore focus to the triggering thumbnail after closing
 - Include meaningful image alt text
 
-### 6. Build the KML When Requested
+### 7. 🗺️ Build the KML When Requested
 
 Create valid KML 2.2 with folders grouped by day or category. For every placemark:
 
@@ -121,7 +144,7 @@ Create valid KML 2.2 with folders grouped by day or category. For every placemar
 
 Prefer exact itinerary listing URLs for matching places. Use precise search URLs only when no exact listing URL exists.
 
-### 7. Add Optional Supporting Files
+### 8. 🎒 Add Optional Supporting Files
 
 When requested:
 
@@ -129,11 +152,11 @@ When requested:
 - Emergency guide: include local emergency numbers, nearby hospitals, pharmacies, embassy or consular contacts, insurance steps, and critical phrases. Verify all safety information.
 - Reproducible image helper: map each venue name to its verified listing photo, download it, verify status and media type, then embed it without changing unrelated HTML.
 
-## Validation
+## 🧪 Validation
 
 After editing, run the narrowest executable checks available.
 
-### HTML
+### 🌐 HTML
 
 - Confirm expected day and restaurant counts.
 - Confirm every route and restaurant link has a nonempty destination.
@@ -146,7 +169,7 @@ After editing, run the narrowest executable checks available.
 - Confirm thumbnail clicks do not trigger the parent Maps action.
 - Check the browser console and editor diagnostics.
 
-### KML
+### 🗺️ KML
 
 - Parse as XML using the KML 2.2 namespace.
 - Confirm placemark count and unique names.
@@ -155,15 +178,16 @@ After editing, run the narrowest executable checks available.
 - Confirm required category styles and colors.
 - Confirm no emoji remains when emoji-free KML is requested.
 
-### Content
+### 📋 Content
 
 - Check dates, day labels, chronology, lodging sequence, and route direction.
 - Check that listing titles match restaurant names.
 - Flag unverified hours, seasonal roads, reservations, and prices.
 - Do not claim validation passed unless the command or browser check actually completed.
 
-## Output Conventions
+## 📦 Output Conventions
 
+- For new trips, write all outputs under the trip's workspace-root `YYYYMM_Destination/` folder.
 - Keep generated filenames descriptive and destination-specific.
 - Preserve offline behavior by embedding assets only when requested; otherwise prefer maintainable external assets.
 - Keep source URLs in scripts or structured data so photos and listings can be refreshed later.

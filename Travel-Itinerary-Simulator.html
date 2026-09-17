@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Travel Itinerary Builder — Request to Ready Trip</title>
+<!-- ============================================================
+     create-simulator — interactive step-through flow walkthrough.
+
+     Self-contained: no CDN, no web fonts, no fetch. Works over
+     file:// and any static server.
+
+     Design tokens are shared with the create-ms-ppt deck engine so a
+     deck and its simulator read as one artifact when you alt-tab.
+     NEVER edit :root, the CSS, or the engine at the bottom.
+
+     YOU AUTHOR ONLY:
+       - the CONFIG block  (run labels, deck back-link, log clock)
+       - the PANELS array  (1-3 dock panels)
+       - the STEPS array   (the run: one entry per step)
+       - the page title above
+
+     THE SCENE IS GENERATED. scripts/new_sim.py --scene rewrites the
+     two marked regions below (CANVAS and SCENE) from a JSON spec. It
+     sizes the normal-mode canvas so it has the same aspect as the
+     viewBox (zero letterbox) and so the scene's main band clears the
+     dock. Do not hand-edit either region — re-run the compiler.
+     ============================================================ -->
+<style>
+:root{
+  /* surfaces */
+  --bg0:#06060a; --stage0:#0b0b10; --stage1:#100f17;
+  --surface:#15151c; --surface2:#1a1a22;
+  --line:#2a2a35; --line-soft:#1e1e27;
+  /* text */
+  --tx:#f4f4f7; --tx2:#abadba; --tx3:#73747f;
+  /* azure accent */
+  --az-bright:#7fe9ff; --az:#50e6ff; --az-deep:#0a84d6;
+  --accent: linear-gradient(100deg,#7fe9ff 0%, #2fa9ee 55%, #0a84d6 100%);
+  /* microsoft four-color */
+  --ms-red:#f25022; --ms-green:#7fba00; --ms-blue:#00a4ef; --ms-yellow:#ffb900;
+  --violet:#bda4ff;
+  /* type scale (container query units on the 16:9 stage) */
+  --fs-kicker:1.85cqh; --fs-body:2.45cqh; --fs-sub:2cqh; --fs-small:1.6cqh;
+  --serif:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Cascadia Code","Cascadia Mono","Consolas",ui-monospace,"SF Mono",Menlo,monospace;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html,body{ height:100%; }
+body{
+  background: radial-gradient(1200px 800px at 80% -10%, #0d1320 0%, transparent 60%), var(--bg0);
+  color:var(--tx); font-family:var(--sans);
+  -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility;
+  display:grid; place-items:center; overflow:hidden;
+}
+#stage{
+  position:relative;
+  width:min(100vw, 177.78vh); height:min(56.25vw, 100vh);
+  background: radial-gradient(120% 130% at 12% 8%, var(--stage1) 0%, var(--stage0) 55%, #07070b 100%);
+  container-type:size; container-name:stage;
+  overflow:hidden; isolation:isolate;
+  box-shadow:0 40px 120px -30px rgba(0,0,0,.8), 0 0 0 1px rgba(255,255,255,.04) inset;
+}
+.glow{ position:absolute; border-radius:50%; filter:blur(60px); z-index:0; pointer-events:none; }
+.glow.g1{ width:55cqw; height:55cqw; left:-10cqw; top:-18cqh;
+  background:radial-gradient(circle, rgba(10,132,214,.16), transparent 65%); animation:drift1 26s ease-in-out infinite; }
+.glow.g2{ width:48cqw; height:48cqw; right:-12cqw; bottom:-20cqh;
+  background:radial-gradient(circle, rgba(80,230,255,.10), transparent 65%); animation:drift2 32s ease-in-out infinite; }
+@keyframes drift1{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(6cqw,4cqh) } }
+@keyframes drift2{ 0%,100%{ transform:translate(0,0) } 50%{ transform:translate(-5cqw,-3cqh) } }
+#stage::after{
+  content:""; position:absolute; inset:0; z-index:6; pointer-events:none;
+  opacity:.035; mix-blend-mode:soft-light;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ===================== mode toggle (lives in the bottom bar) ===================== */
+.modes{ display:flex; border:1px solid var(--line); border-radius:10cqh; overflow:hidden;
+  background:rgba(255,255,255,.02); flex:none; }
+.modes button{ font-family:var(--sans); font-size:1.35cqh; letter-spacing:.12em; text-transform:uppercase;
+  color:var(--tx2); background:none; border:none; padding:.6cqh 1.2cqw; cursor:pointer;
+  display:flex; align-items:center; gap:.6cqw; transition:all .25s ease; white-space:nowrap; }
+.modes button:hover{ color:var(--tx); }
+.modes button.on{ background:var(--accent); color:#04121c; font-weight:600; }
+.modes button .tri{ font-size:1.1cqh; }
+.deckbtn{ display:flex; align-items:center; gap:.6cqw; font-family:var(--sans); font-size:1.35cqh;
+  letter-spacing:.12em; text-transform:uppercase; color:var(--tx2); text-decoration:none; flex:none;
+  border:1px solid var(--line); border-radius:10cqh; padding:.6cqh 1.2cqw; margin-right:1cqw;
+  background:rgba(255,255,255,.02); transition:all .25s ease; white-space:nowrap; }
+.deckbtn:hover{ color:var(--tx); border-color:var(--az-deep); }
+.deckbtn[hidden]{ display:none; }
+
+/* ===================== diagram canvas ===================== */
+/* CANVAS:BEGIN — generated by scripts/new_sim.py --scene. Do not hand-edit.
+   viewBox aspect 3.278 : normal-mode region has the same aspect (zero letterbox) and
+   is sized so the scene's main band (100.0% of the viewBox) clears the dock. */
+#canvas{ position:absolute; top:1.8cqh; left:2.6cqw; width:94.8cqw; height:51.4cqh; z-index:2;
+  transition:top .55s cubic-bezier(.22,.61,.36,1), left .55s cubic-bezier(.22,.61,.36,1),
+    width .55s cubic-bezier(.22,.61,.36,1), height .55s cubic-bezier(.22,.61,.36,1); }
+/* intro: the diagram IS the page */
+#stage.intro #canvas{ top:3cqh; left:1.5cqw; width:97cqw; height:82cqh; }
+/* CANVAS:END */
+#stage.intro #dock, #stage.intro .chrome-bot{ opacity:0; pointer-events:none; }
+#startbtn{ position:absolute; left:50%; bottom:4.6cqh; transform:translateX(-50%); z-index:8;
+  font-family:var(--sans); font-size:2.1cqh; font-weight:600; letter-spacing:.2em; text-transform:uppercase;
+  background:var(--accent); color:#04121c; border:none; border-radius:10cqh; padding:1.9cqh 4.5cqw;
+  cursor:pointer; display:flex; align-items:center; gap:1.2cqw;
+  box-shadow:0 0 34px rgba(80,230,255,.35), 0 14px 40px -14px rgba(0,0,0,.8);
+  opacity:0; pointer-events:none; transition:opacity .4s ease; }
+#stage.intro #startbtn{ opacity:1; pointer-events:auto; }
+#startbtn:hover{ box-shadow:0 0 46px rgba(80,230,255,.55), 0 14px 40px -14px rgba(0,0,0,.8); }
+#startbtn .tri{ font-size:1.7cqh; }
+#flow{ width:100%; height:100%; display:block; }
+/* the extra band is intro-only: once the dock is up, that vertical space
+   belongs to the enlarged diagram (a dock panel takes the subject over) */
+.extra-band{ transition:opacity .4s ease; }
+#stage:not(.intro) .extra-band{ opacity:0 !important; pointer-events:none; }
+
+/* zones */
+.zone rect.zbg{ fill:rgba(255,255,255,.028); stroke:#42424f; stroke-width:1.2; rx:12; }
+.zone .zlabel{ font-family:var(--sans); font-size:12px; font-weight:600; letter-spacing:2.6px;
+  fill:var(--tx2); text-transform:uppercase; }
+.zone .zsub{ font-family:var(--sans); font-size:10px; letter-spacing:.6px; fill:#848692; }
+.zone.z-red rect.zbg{ stroke:rgba(242,80,34,.55); fill:rgba(242,80,34,.045); }
+.zone.z-red .zlabel{ fill:#ff8a70; }
+.zone.z-purple rect.zbg{ stroke:rgba(189,164,255,.5); fill:rgba(189,164,255,.04); }
+.zone.z-purple .zlabel{ fill:var(--violet); }
+.zone.z-green rect.zbg{ stroke:rgba(127,186,0,.7); fill:rgba(127,186,0,.035); }
+.zone.z-blue rect.zbg{ stroke:rgba(0,164,239,.6); fill:rgba(0,164,239,.035); }
+.zone.z-az rect.zbg{ stroke:rgba(80,230,255,.5); fill:rgba(80,230,255,.03); }
+#flow.focused .zone{ opacity:.55; transition:opacity .35s ease; }
+#flow.focused .zone.active{ opacity:1; }
+.zone{ transition:opacity .35s ease; }
+
+/* boundary lines */
+.bline{ stroke-dasharray:5 6; stroke-width:1.5; fill:none; }
+.bline.b1{ stroke:rgba(127,186,0,.55); }
+.bline.b2{ stroke:rgba(242,80,34,.55); }
+.bline.b1.hot{ filter:drop-shadow(0 0 6px rgba(127,186,0,.9)); stroke:var(--ms-green); }
+.bchip div{ font-family:var(--sans); font-size:8.5px; font-weight:600; letter-spacing:1.6px;
+  text-transform:uppercase; text-align:center; padding:3px 4px; border-radius:6px; line-height:1.25; }
+.bchip.c1 div{ color:var(--ms-green); background:#0e1409; border:1px solid rgba(127,186,0,.5); }
+.bchip.c2 div{ color:var(--ms-red); background:#170d0b; border:1px solid rgba(242,80,34,.5); }
+
+/* edges */
+.edge{ fill:none; stroke:rgba(80,230,255,.36); stroke-width:1.7; transition:stroke .3s ease; }
+.edge.dashed{ stroke-dasharray:4 5; }
+.edge.soft{ stroke:rgba(189,164,255,.30); stroke-dasharray:3 5; }
+.edge.bad{ stroke:rgba(242,80,34,.45); stroke-dasharray:4 5; }
+.edge.flowing{ stroke:var(--az); stroke-width:2.4; stroke-dasharray:7 9;
+  animation:dashflow .7s linear infinite; filter:drop-shadow(0 0 5px rgba(80,230,255,.55)); }
+.edge.flowing.tone-warn{ stroke:var(--ms-yellow); filter:drop-shadow(0 0 5px rgba(255,185,0,.55)); }
+.edge.flowing.tone-safe{ stroke:var(--ms-green); filter:drop-shadow(0 0 5px rgba(127,186,0,.55)); }
+@keyframes dashflow{ to{ stroke-dashoffset:-16; } }
+
+/* nodes (foreignObject shells) */
+.node{ cursor:pointer; }
+.node .shell{
+  height:100%; display:flex; flex-direction:column; justify-content:center; gap:2px;
+  background:var(--surface); border:1.3px solid #4a4a58; border-radius:9px;
+  padding:6px 9px; transition:border-color .3s ease, box-shadow .3s ease, background .3s ease;
+}
+.node .nname{ font-family:var(--sans); font-size:12.5px; font-weight:600; color:var(--tx);
+  line-height:1.15; letter-spacing:-.1px; }
+.node .nsub{ font-family:var(--sans); font-size:9.5px; font-weight:400; color:#8f919e; line-height:1.25; }
+.node .ntag{ display:inline-block; font-family:var(--mono); font-size:7.5px; letter-spacing:1.6px;
+  color:var(--az-bright); background:rgba(80,230,255,.08); border:1px solid rgba(80,230,255,.22);
+  border-radius:4px; padding:1px 5px; margin-bottom:2px; width:fit-content; }
+.node .mono, .node code{ font-family:var(--mono); }
+
+.node.round .shell{ border-radius:22px; align-items:center; text-align:center; }
+.node.n-blue .shell{ border-color:rgba(0,164,239,.5); background:linear-gradient(180deg, rgba(0,164,239,.06), var(--surface)); }
+.node.n-green .shell{ border-color:rgba(127,186,0,.55); background:linear-gradient(180deg, rgba(127,186,0,.05), var(--surface)); }
+.node.n-green .ntag{ color:var(--ms-green); background:rgba(127,186,0,.08); border-color:rgba(127,186,0,.3); }
+.node.n-red .shell{ border-color:rgba(242,80,34,.6); background:linear-gradient(180deg, rgba(242,80,34,.06), var(--surface)); }
+.node.n-red .nname{ color:#ff8a70; }
+.node.n-purple .shell{ border-color:rgba(189,164,255,.45); background:linear-gradient(180deg, rgba(189,164,255,.05), var(--surface)); }
+.node.n-purple .nname{ color:var(--violet); }
+.node.dashed .shell{ border-style:dashed; }
+
+.node.active .shell{ border-color:var(--az); animation:nodeglow 1.9s ease-in-out infinite; }
+.node.active.n-green .shell{ border-color:var(--ms-green); animation-name:nodeglowG; }
+.node.active.tone-warn .shell{ border-color:var(--ms-yellow); animation-name:nodeglowW; }
+@keyframes nodeglow{ 0%,100%{ box-shadow:0 0 10px -2px rgba(80,230,255,.45);} 50%{ box-shadow:0 0 22px -2px rgba(80,230,255,.75);} }
+@keyframes nodeglowG{ 0%,100%{ box-shadow:0 0 10px -2px rgba(127,186,0,.45);} 50%{ box-shadow:0 0 22px -2px rgba(127,186,0,.75);} }
+@keyframes nodeglowW{ 0%,100%{ box-shadow:0 0 10px -2px rgba(255,185,0,.45);} 50%{ box-shadow:0 0 22px -2px rgba(255,185,0,.75);} }
+.node.flash-red .shell{ border-color:var(--ms-red) !important; box-shadow:0 0 24px -2px rgba(242,80,34,.85) !important; }
+.node.flash-green .shell{ border-color:var(--ms-green) !important; box-shadow:0 0 24px -2px rgba(127,186,0,.85) !important; }
+
+/* step number badges */
+.snum{ cursor:pointer; }
+.snum circle{ fill:#0b0f17; stroke:rgba(80,230,255,.45); stroke-width:1.3; transition:all .3s ease; }
+.snum text{ font-family:var(--mono); font-size:11px; fill:var(--az-bright); text-anchor:middle;
+  dominant-baseline:central; }
+.snum:hover circle{ stroke:var(--az-bright); }
+.snum.cur circle{ stroke:var(--az-bright); stroke-width:2; filter:drop-shadow(0 0 6px rgba(80,230,255,.8)); }
+.snum.past circle{ stroke:rgba(44,111,149,.9); }
+.snum.past text{ fill:#5f97b5; }
+
+/* packet */
+#packet{ pointer-events:none; opacity:0; transition:opacity .25s ease; }
+#packet rect{ fill:#0b0f17; stroke:var(--az); stroke-width:1.4;
+  filter:drop-shadow(0 0 7px rgba(80,230,255,.8)); }
+#packet text{ font-family:var(--mono); font-size:9.5px; font-weight:600; fill:var(--az-bright);
+  text-anchor:middle; dominant-baseline:central; letter-spacing:.6px; }
+#packet.show{ opacity:1; }
+#packet.tone-warn rect{ stroke:var(--ms-yellow); filter:drop-shadow(0 0 7px rgba(255,185,0,.8)); }
+#packet.tone-warn text{ fill:var(--ms-yellow); }
+#packet.tone-safe rect{ stroke:var(--ms-green); filter:drop-shadow(0 0 7px rgba(127,186,0,.8)); }
+#packet.tone-safe text{ fill:var(--ms-green); }
+/* pulse the INNER group only — a CSS transform on #packet itself would
+   override its SVG translate() position and teleport it to the origin */
+#packet.pulse #pkt-inner{ animation:pktpulse .7s ease-in-out; }
+@keyframes pktpulse{ 0%,100%{ transform:scale(1);} 50%{ transform:scale(1.45);} }
+
+/* ===================== bottom dock ===================== */
+#dock{ position:absolute; top:57.4cqh; left:2.6cqw; right:2.6cqw; height:37.8cqh; z-index:4;
+  transition:opacity .4s ease; }
+.pane-wrap{ position:absolute; inset:0; opacity:1; transition:opacity .28s ease, transform .28s ease; }
+.pane-wrap.gone{ opacity:0; transform:translateY(1.2cqh); pointer-events:none; }
+
+/* --- dock panels (1-3, laid out from the PANELS config) --- */
+#sim{ height:100%; display:grid; gap:1.1cqw; }
+.panel{ background:var(--surface); border:1px solid var(--line); border-radius:1.2cqh;
+  display:flex; flex-direction:column; overflow:hidden; min-width:0;
+  box-shadow:0 24px 60px -28px rgba(0,0,0,.75); }
+.panel .phead{ flex:none; display:flex; align-items:center; gap:1cqw; padding:1.1cqh 1.3cqw;
+  background:var(--surface2); border-bottom:1px solid var(--line); }
+.panel .phead .d{ width:1.15cqh; height:1.15cqh; border-radius:50%; flex:none; }
+.panel .phead .d.r{ background:#ff5f57; } .panel .phead .d.y{ background:#febc2e; } .panel .phead .d.g{ background:#28c840; }
+.panel .phead .pt{ font-family:var(--mono); font-size:1.4cqh; color:var(--tx3); letter-spacing:.08em;
+  line-height:1.35; }
+.panel .phead .pt b{ color:var(--tx2); font-weight:600; }
+.panel .pbody{ flex:1; overflow-y:auto; padding:1.3cqh 1.2cqw; scrollbar-width:thin; scrollbar-color:var(--line) transparent; }
+
+/* chat */
+.p-chat .pbody{ display:flex; flex-direction:column; gap:1cqh; }
+.msg{ max-width:94%; font-size:1.9cqh; line-height:1.42; font-weight:300; color:var(--tx2);
+  animation:rowin .3s ease both; }
+.msg.user{ align-self:flex-end; background:rgba(80,230,255,.07); border:1px solid rgba(80,230,255,.25);
+  border-radius:1cqh 1cqh .25cqh 1cqh; padding:1cqh 1.2cqw; color:var(--tx); }
+.msg.agent{ align-self:flex-start; background:var(--surface2); border:1px solid var(--line);
+  border-radius:1cqh 1cqh 1cqh .25cqh; padding:1cqh 1.2cqw; }
+.msg.agent b{ color:var(--tx); font-weight:600; }
+.msg.sys{ align-self:flex-start; font-family:var(--mono); font-size:1.4cqh; color:var(--tx3);
+  padding:.1cqh .4cqw; }
+.msg.sys .ok{ color:var(--ms-green); }
+.msg .cursor{ display:inline-block; width:.9ch; height:1.7cqh; background:var(--az-bright);
+  transform:translateY(.3cqh); animation:blink 1.05s steps(1) infinite; }
+@keyframes blink{ 0%,50%{ opacity:1 } 50.01%,100%{ opacity:0 } }
+@keyframes rowin{ from{ opacity:0; transform:translateY(.8cqh);} to{ opacity:1; transform:none;} }
+
+/* inspector */
+.p-insp .pbody{ font-family:var(--mono); }
+.itone{ display:inline-block; font-size:1.15cqh; font-weight:600; letter-spacing:.22em; text-transform:uppercase;
+  border-radius:.5cqh; padding:.25cqh .8cqw; margin-bottom:1cqh; }
+.itone.warn{ color:var(--ms-yellow); background:rgba(255,185,0,.08); border:1px solid rgba(255,185,0,.35); }
+.itone.safe{ color:var(--ms-green); background:rgba(127,186,0,.08); border:1px solid rgba(127,186,0,.35); }
+.itone.info{ color:var(--az-bright); background:rgba(80,230,255,.08); border:1px solid rgba(80,230,255,.3); }
+.itone.note{ color:var(--tx2); background:rgba(255,255,255,.04); border:1px solid var(--line); }
+.ititle{ font-family:var(--sans); font-size:1.95cqh; font-weight:600; color:var(--tx); margin-bottom:1cqh; }
+.irow{ font-size:1.66cqh; line-height:1.58; color:var(--tx2); white-space:pre-wrap; word-break:break-word; }
+.irow.strike{ text-decoration:line-through; text-decoration-color:rgba(242,80,34,.75);
+  text-decoration-thickness:.18cqh; color:var(--tx3); }
+.irow .k{ color:var(--az-bright); }
+.irow .ok{ color:var(--ms-green); }
+.irow .warn{ color:var(--ms-yellow); }
+
+/* mapping rows: what the agent held -> which list -> what it could pick.
+   A grid so the three parts line up in columns; reading down a column is the point. */
+.isec{ font-family:var(--sans); font-size:1.12cqh; text-transform:uppercase; letter-spacing:.15em;
+  color:var(--tx3); font-weight:600; margin:.75cqh 0 .32cqh; }
+.isec:first-child{ margin-top:0; }
+.imap{ display:grid; grid-template-columns:minmax(0,.78fr) minmax(0,.58fr) minmax(0,1.36fr);
+  gap:0 .7cqw; align-items:baseline; font-size:1.5cqh; line-height:1.34; padding:.09cqh 0; }
+.imap .mraw{ color:var(--tx2); word-break:break-word; }
+.imap .marr{ color:var(--tx3); margin-right:.28cqw; }
+.imap .mfield{ color:var(--tx3); word-break:break-word; }
+.imap .mval{ color:var(--az-bright); word-break:break-word; }
+.imap .mval i{ color:var(--tx3); font-style:normal; font-size:.86em; }
+.imap.ihead{ font-family:var(--sans); font-size:1.02cqh; text-transform:uppercase; letter-spacing:.12em;
+  font-weight:600; color:var(--tx3); border-bottom:1px solid var(--line-soft);
+  padding-bottom:.3cqh; margin-bottom:.34cqh; }
+.inote{ font-family:var(--sans); font-size:1.45cqh; color:var(--tx3); font-weight:300; margin-top:1cqh;
+  font-style:italic; }
+.p-insp .pbody.swap{ animation:inspswap .32s ease; }
+@keyframes inspswap{ from{ opacity:0; transform:translateY(.7cqh);} to{ opacity:1; transform:none;} }
+
+/* audit */
+.p-log .phead .pt b{ color:var(--violet); }
+.arow{ display:flex; gap:.9cqw; align-items:flex-start; padding:.85cqh 0; border-bottom:1px solid var(--line-soft);
+  animation:rowin .3s ease both; }
+.arow:last-child{ border-bottom:none; }
+.arow .ts{ font-family:var(--mono); font-size:1.25cqh; color:var(--tx3); flex:none; padding-top:.25cqh; }
+.arow .abadge{ font-family:var(--mono); font-size:1.05cqh; font-weight:600; letter-spacing:.14em; flex:none;
+  border-radius:.45cqh; padding:.2cqh .6cqw; margin-top:.1cqh; }
+.arow .abadge.purple{ color:var(--violet); background:rgba(189,164,255,.09); border:1px solid rgba(189,164,255,.35); }
+.arow .abadge.green{ color:var(--ms-green); background:rgba(127,186,0,.08); border:1px solid rgba(127,186,0,.35); }
+.arow .abadge.az{ color:var(--az-bright); background:rgba(80,230,255,.08); border:1px solid rgba(80,230,255,.3); }
+.arow .atxt{ font-family:var(--mono); font-size:1.45cqh; line-height:1.52; color:var(--tx2); word-break:break-word; }
+.arow .atxt b{ color:var(--tx); font-weight:600; }
+.aempty{ font-size:1.5cqh; color:var(--tx3); font-style:italic; font-weight:300; padding:.6cqh 0; }
+
+/* code — a mono source/payload block, replaced each step */
+.p-code .pbody{ font-family:var(--mono); }
+.p-code .phead .pt b{ color:var(--az-bright); }
+.ctitle{ font-family:var(--sans); font-size:1.6cqh; font-weight:600; color:var(--tx2);
+  letter-spacing:.04em; margin-bottom:.9cqh; }
+.cline{ display:flex; gap:.7cqw; align-items:baseline; font-size:1.5cqh; line-height:1.62;
+  color:var(--tx2); white-space:pre-wrap; word-break:break-word; padding-left:.55cqw;
+  margin-left:-.55cqw; border-left:.22cqh solid transparent; }
+.cline .cn{ flex:none; min-width:2.2ch; text-align:right; color:var(--tx3); font-size:1.25cqh;
+  user-select:none; }
+.cline .ct{ min-width:0; }
+.cline .ct .k{ color:var(--az-bright); }
+.cline .ct .ok{ color:var(--ms-green); }
+.cline .ct .warn{ color:var(--ms-yellow); }
+.cline .ct .bad{ color:var(--ms-red); }
+.cline .ct .cm{ color:var(--tx3); font-style:italic; }
+.cline.hl{ background:rgba(80,230,255,.06); border-left-color:var(--az); color:var(--tx); }
+.cline.add{ background:rgba(127,186,0,.06); border-left-color:var(--ms-green); }
+.cline.del{ background:rgba(242,80,34,.06); border-left-color:var(--ms-red); color:var(--tx3);
+  text-decoration:line-through; text-decoration-color:rgba(242,80,34,.6); }
+.p-code .pbody.swap{ animation:inspswap .32s ease; }
+
+/* metrics — label / value / delta rows, replaced each step */
+.p-metrics .phead .pt b{ color:var(--ms-green); }
+.mrow{ display:grid; grid-template-columns:minmax(0,1fr) auto auto; gap:0 .8cqw; align-items:baseline;
+  padding:.85cqh 0; border-bottom:1px solid var(--line-soft); animation:rowin .3s ease both; }
+.mrow:last-child{ border-bottom:none; }
+.mrow .mlabel{ font-family:var(--sans); font-size:1.5cqh; font-weight:300; color:var(--tx2);
+  word-break:break-word; }
+.mrow .mvalue{ font-family:var(--mono); font-size:1.95cqh; font-weight:600; color:var(--tx);
+  letter-spacing:-.01em; white-space:nowrap; }
+.mrow .mdelta{ font-family:var(--mono); font-size:1.2cqh; font-weight:600; letter-spacing:.1em;
+  border-radius:.45cqh; padding:.18cqh .55cqw; white-space:nowrap; color:var(--tx3);
+  background:rgba(255,255,255,.04); border:1px solid var(--line); }
+.mrow.up .mvalue{ color:var(--ms-green); }
+.mrow.up .mdelta{ color:var(--ms-green); background:rgba(127,186,0,.08); border-color:rgba(127,186,0,.35); }
+.mrow.down .mvalue{ color:var(--ms-red); }
+.mrow.down .mdelta{ color:var(--ms-red); background:rgba(242,80,34,.08); border-color:rgba(242,80,34,.35); }
+.mrow.warn .mvalue{ color:var(--ms-yellow); }
+.mrow.warn .mdelta{ color:var(--ms-yellow); background:rgba(255,185,0,.08); border-color:rgba(255,185,0,.35); }
+.mrow.az .mvalue{ color:var(--az-bright); }
+.mrow.az .mdelta{ color:var(--az-bright); background:rgba(80,230,255,.08); border-color:rgba(80,230,255,.3); }
+.p-metrics .pbody.swap{ animation:inspswap .32s ease; }
+
+/* ===================== bottom chrome ===================== */
+.chrome-bot{ position:absolute; left:2.6cqw; right:2.6cqw; bottom:.9cqh; z-index:5;
+  display:flex; align-items:center; gap:1.6cqw; transition:opacity .4s ease; }
+.progress{ flex:1; display:flex; gap:.55cqw; align-items:center; }
+.seg{ height:.34cqh; flex:1; background:#2a2a34; border-radius:2px; cursor:pointer;
+  transition:background .4s ease, transform .25s ease; }
+.seg:hover{ transform:scaleY(2.4); }
+.seg.past{ background:#2c6f95; }
+.seg.cur{ background:var(--accent); box-shadow:0 0 10px rgba(80,230,255,.5); }
+.counter{ font-family:var(--mono); font-size:var(--fs-small); color:var(--tx2);
+  letter-spacing:.1em; white-space:nowrap; }
+.counter b{ color:var(--az-bright); font-weight:600; }
+.autop{ font-family:var(--sans); font-size:1.4cqh; letter-spacing:.14em; text-transform:uppercase;
+  color:var(--tx3); background:none; border:1px solid var(--line); border-radius:10cqh;
+  padding:.6cqh 1.4cqw; cursor:pointer; transition:all .25s ease; display:none; white-space:nowrap; }
+.autop.vis{ display:block; }
+.autop.on{ color:var(--ms-green); border-color:rgba(127,186,0,.5); }
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce){
+  .glow{ animation:none !important; }
+  .edge.flowing{ animation:none !important; }
+  .node.active .shell{ animation:none !important; box-shadow:0 0 16px -2px rgba(80,230,255,.6); }
+  .msg,.arow,.mrow{ animation:none !important; }
+  .p-insp .pbody.swap, .p-code .pbody.swap, .p-metrics .pbody.swap{ animation:none !important; }
+  .msg .cursor{ animation:none; }
+  #packet.pulse #pkt-inner{ animation:none; }
+}
+</style>
+</head>
+<body>
+<div id="stage" class="intro" role="application" aria-label="Interactive walkthrough">
+
+  <div class="glow g1"></div>
+  <div class="glow g2"></div>
+
+  <!-- ============ diagram ============ -->
+  <div id="canvas">
+    <!-- SCENE:BEGIN — generated by scripts/new_sim.py --scene. Do not hand-edit. -->
+    <svg id="flow" viewBox="0 -36 1272 388" preserveAspectRatio="xMidYMid meet" aria-label="Travel itinerary request becoming a validated trip package">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 1 L 9 5 L 0 9 z" fill="rgba(80,230,255,.4)"/>
+        </marker>
+        <marker id="arr-p" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 1 L 9 5 L 0 9 z" fill="rgba(189,164,255,.45)"/>
+        </marker>
+        <marker id="arr-r" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path d="M 0 1 L 9 5 L 0 9 z" fill="rgba(242,80,34,.55)"/>
+        </marker>
+      </defs>
+
+      <!-- ===== zones ===== -->
+      <g class="zone" id="z-traveler">
+        <rect class="zbg" x="8" y="14" width="206.8" height="338" rx="12"/>
+        <text class="zlabel" x="24" y="40">Traveler</text>
+        <text class="zsub" x="24" y="56">the trip request</text>
+      </g>
+      <g class="zone z-az" id="z-brief">
+        <rect class="zbg" x="226.8" y="14" width="289.5" height="338" rx="12"/>
+        <text class="zlabel" x="242.8" y="40">Trip Definition</text>
+        <text class="zsub" x="242.8" y="56">dates, people, route</text>
+      </g>
+      <g class="zone z-green" id="z-planning">
+        <rect class="zbg" x="528.3" y="14" width="413.6" height="338" rx="12"/>
+        <text class="zlabel" x="544.3" y="40">Planning & Verification</text>
+        <text class="zsub" x="544.3" y="56">the itinerary skill</text>
+      </g>
+      <g class="zone z-blue" id="z-package">
+        <rect class="zbg" x="953.8" y="14" width="310.2" height="338" rx="12"/>
+        <text class="zlabel" x="969.8" y="40">YYYYMM_Destination</text>
+        <text class="zsub" x="969.8" y="56">one self-contained folder</text>
+      </g>
+
+      <!-- ===== boundary lines ===== -->
+      <path class="bline b1" id="bnd-package" d="M 943 -32 L 943 352"/>
+      <foreignObject class="bchip c1" x="898" y="-32" width="90" height="30">
+        <div xmlns="http://www.w3.org/1999/xhtml">Validated<br/>package</div>
+      </foreignObject>
+
+      <!-- ===== edges (authored in travel direction) ===== -->
+      <path class="edge" id="e1" d="M 202.8 203 C 229.4 203, 212.2 143, 238.8 143" marker-end="url(#arr)"/>
+      <path class="edge" id="e3" d="M 371.6 186 L 371.6 220" marker-end="url(#arr)"/>
+      <path class="edge" id="e4" d="M 504.3 263 C 565.8 263, 478.8 105.2, 540.3 105.2" marker-end="url(#arr)"/>
+      <path class="edge" id="e5" d="M 735.1 131.2 L 735.1 144.4" marker-end="url(#arr)"/>
+      <path class="edge" id="e6" d="M 735.1 196.4 L 735.1 209.6" marker-end="url(#arr)"/>
+      <path class="edge" id="e7" d="M 929.9 227.8 C 978 227.8, 917.7 106.4, 965.8 106.4" marker-end="url(#arr)"/>
+      <path class="edge" id="e8" d="M 929.9 246 C 958.2 246, 937.5 180.8, 965.8 180.8" marker-end="url(#arr)"/>
+      <path class="edge" id="e9" d="M 965.8 170.6 C 909.7 170.6, 986 313.8, 929.9 313.8" marker-end="url(#arr)"/>
+      <path class="edge" id="e10" d="M 929.9 311.2 C 953.9 311.2, 941.8 304.6, 965.8 304.6" marker-end="url(#arr)"/>
+
+      <!-- ===== step number badges ===== -->
+      <g class="snum" data-step="1" transform="translate(220.8,157)"><circle r="11"/><text>1</text></g>
+      <g class="snum" data-step="2" transform="translate(371.6,82)"><circle r="11"/><text>2</text></g>
+      <g class="snum" data-step="3" transform="translate(399.6,203)"><circle r="11"/><text>3</text></g>
+      <g class="snum" data-step="4" transform="translate(522.3,168.1)"><circle r="11"/><text>4</text></g>
+      <g class="snum" data-step="5" transform="translate(765.1,137.8)"><circle r="11"/><text>5</text></g>
+      <g class="snum" data-step="6" transform="translate(705.1,203)"><circle r="11"/><text>6</text></g>
+      <g class="snum" data-step="7" transform="translate(948.2,142.7)"><circle r="11"/><text>7</text></g>
+      <g class="snum" data-step="8" transform="translate(949.4,183.9)"><circle r="11"/><text>8</text></g>
+      <g class="snum" data-step="9" transform="translate(946.7,251.6)"><circle r="11"/><text>9</text></g>
+      <g class="snum" data-step="10" transform="translate(947.9,325.9)"><circle r="12"/><text>10</text></g>
+
+      <!-- ===== nodes ===== -->
+      <g class="node round" id="n-traveler" data-node tabindex="0" role="button" aria-label="Traveler">
+        <foreignObject x="20" y="148" width="182.8" height="110">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="nname">Traveler</span>
+            <span class="nsub">describes one vacation</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node" id="n-intake" data-node tabindex="0" role="button" aria-label="Trip request">
+        <foreignObject x="238.8" y="100" width="265.5" height="86">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">BRIEF</span>
+            <span class="nname">Trip request</span>
+            <span class="nsub">dates &middot; travelers &middot; route</span>
+            <span class="nsub">lodging &middot; activities &middot; needs</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-green" id="n-organize" data-node tabindex="0" role="button" aria-label="YYYYMM_Destination">
+        <foreignObject x="238.8" y="220" width="265.5" height="86">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">CONVENTION</span>
+            <span class="nname mono">YYYYMM_Destination</span>
+            <span class="nsub">starting month + primary place</span>
+            <span class="nsub">all outputs stay together</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node" id="n-plan" data-node tabindex="0" role="button" aria-label="Normalize by day">
+        <foreignObject x="540.3" y="79.2" width="389.6" height="52">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">PLAN</span>
+            <span class="nname">Normalize by day</span>
+            <span class="nsub">route &middot; lodging &middot; meals</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-blue" id="n-sources" data-node tabindex="0" role="button" aria-label="Official facts">
+        <foreignObject x="540.3" y="144.4" width="389.6" height="52">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">SOURCES</span>
+            <span class="nname">Official facts</span>
+            <span class="nsub">hours &middot; roads &middot; bookings</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node" id="n-builder" data-node tabindex="0" role="button" aria-label="Artifact builder">
+        <foreignObject x="540.3" y="209.6" width="389.6" height="52">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">BUILD</span>
+            <span class="nname">Artifact builder</span>
+            <span class="nsub">HTML &middot; maps &middot; guides</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-green" id="n-validator" data-node tabindex="0" role="button" aria-label="Validator">
+        <foreignObject x="540.3" y="274.8" width="389.6" height="52">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">CHECK</span>
+            <span class="nname">Validator</span>
+            <span class="nsub">content &middot; behavior &middot; XML</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-blue" id="n-itinerary" data-node tabindex="0" role="button" aria-label="index.html">
+        <foreignObject x="965.8" y="72.4" width="286.2" height="68">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">PRIMARY</span>
+            <span class="nname mono">index.html</span>
+            <span class="nsub">interactive daily itinerary</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-blue" id="n-support" data-node tabindex="0" role="button" aria-label="Maps &amp; guides">
+        <foreignObject x="965.8" y="146.8" width="286.2" height="68">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="ntag">SUPPORT</span>
+            <span class="nname">Maps & guides</span>
+            <span class="nsub">KML &middot; packing &middot; emergency</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-red round" id="n-revise" data-node tabindex="0" role="button" aria-label="REVISION NEEDED">
+        <foreignObject x="965.8" y="221.2" width="286.2" height="48">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="nname">REVISION NEEDED</span>
+            <span class="nsub">fail closed on validation</span>
+          </div>
+        </foreignObject>
+      </g>
+      <g class="node n-green round" id="n-ready" data-node tabindex="0" role="button" aria-label="TRIP PACKAGE READY">
+        <foreignObject x="965.8" y="275.6" width="286.2" height="58">
+          <div class="shell" xmlns="http://www.w3.org/1999/xhtml">
+            <span class="nname">TRIP PACKAGE READY</span>
+            <span class="nsub">verified &middot; organized &middot; portable</span>
+          </div>
+        </foreignObject>
+      </g>
+
+      <!-- ===== packet ===== -->
+      <g id="packet"><g id="pkt-inner"><rect x="-22" y="-11" width="44" height="22" rx="7"/><text id="pkt-label">REQ</text></g></g>
+    </svg>
+    <!-- SCENE:END -->
+  </div>
+
+  <!-- ============ bottom dock ============ -->
+  <div id="dock">
+    <!-- panels are built from the PANELS config in the engine -->
+    <div class="pane-wrap" id="wrap-sim">
+      <div id="sim"></div>
+    </div>
+  </div>
+
+  <!-- ============ intro action ============ -->
+  <button id="startbtn"><span class="tri">&#9654;</span> Start simulation</button>
+
+  <!-- ============ bottom chrome ============ -->
+  <div class="chrome-bot">
+    <a class="deckbtn" id="deckbtn" href="#" title="Back to the slide deck" hidden>&#9666; Slides</a>
+    <div class="modes">
+      <button id="m-sim" class="on"><span class="tri">&#9654;</span> Run it</button>
+    </div>
+    <div class="progress" id="progress" aria-hidden="true"></div>
+    <button class="autop vis" id="autop" aria-pressed="false">Autoplay: off</button>
+    <div class="counter"><b id="cur">&mdash;</b> / <span id="tot">0</span></div>
+  </div>
+
+</div>
+
+<script>
+(function(){
+"use strict";
+const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const $ = id => document.getElementById(id);
+
+/* ============================================================
+   CONFIG — author this.
+   ============================================================ */
+const CONFIG = {
+  runLabel:   'Plan the trip',
+  startLabel: 'Start trip walkthrough',
+  deck:       null,
+  clock:      { start:'10:15:00', step:5 },
+  autoplayMs: 5000,
+  autoplayDefault: true,
+  readyText:  'Ready. Press <b>Plan the trip</b> to send the brief &mdash; autoplay will continue the walkthrough.'
+};
+
+/* ============================================================
+   PANELS — 1 to 3 of them. type picks the renderer; weight is the
+   grid share; field is the STEPS key it reads (defaults to type).
+     chat      append  · typed messages, {who:'user'|'agent'|'sys', t, type}
+     inspector replace · toned payload rows, {tone:note|safe|warn|info, toneLabel, title, rows, note}
+     log       append  · timestamped records, {badge,tone,t}
+     code      replace · mono block, {title,numbers,lines:[{t,hl,add,del,n}]}
+     metrics   replace · label/value/delta rows, {label,value,delta,tone}
+   ============================================================ */
+const PANELS = [
+  { id:'chat', type:'chat', weight:28, title:'TRIP REQUEST', sub:'traveler and planner',
+    empty:'' },
+  { id:'insp', type:'inspector', weight:37, title:'PLAN INSPECTOR', sub:'what the package contains now' },
+  { id:'log',  type:'log', weight:27, title:'TRIP RECORD', sub:'decisions and checks',
+    empty:'No trip records yet. Decisions appear as the request moves.' }
+];
+
+/* ============================================================
+   THE STEPS ARRAY — single source of truth for the run.
+   Every panel and every bit of diagram state renders from this.
+   Never hard-code step content anywhere else.
+
+   Per step:
+     n         1-based step number (must match the scene badge)
+     node      id of the node this step lands on            (required)
+     edge      id of the edge the packet flies              (null = pulse in place)
+     zones     zone ids to hold lit                         (required, may be [])
+     tone      'az' | 'safe' | 'warn'  — packet/edge/node color
+     pkt       short packet label, 3-4 characters
+     dur       packet flight time in ms
+     hot       optional boundary id to light for this step
+     beat      optional {fail, pass, boundary} flash beat after the flight
+     chatAfter true = play chat messages after the flight, not before
+     <field>   one key per panel: chat / inspector / log / code / metrics
+   ============================================================ */
+const STEPS = [
+  { n:1, node:'n-intake', edge:'e1', zones:['z-traveler','z-brief'], tone:'az', pkt:'BRF', dur:650,
+    chat:[{who:'user', type:true, t:'Plan a family road trip to Chamonix for May 18&ndash;24, 2027.'}],
+    inspector:{ tone:'note', toneLabel:'INBOUND', title:'The trip brief, as received',
+      rows:[{t:'dates: May 18&ndash;24, 2027', k:true},
+            {t:'travelers: 2 adults &middot; 3 children'},
+            {t:'route: Wiesbaden &rarr; Strasbourg &rarr; Annecy &rarr; Chamonix'},
+            {t:'outputs: HTML &middot; KML &middot; packing &middot; emergency'}],
+      note:'The request is the source of truth. Unknown details stay visibly unknown.' },
+    log:[] },
+
+  { n:2, node:'n-intake', edge:null, zones:['z-brief'], tone:'az', pkt:'ASK', dur:450,
+    chat:[{who:'agent', type:true, t:'Which lodging is confirmed, and should restaurant photos work offline?'}],
+    inspector:{ tone:'info', toneLabel:'CLARIFY', title:'Ask only what changes the plan',
+      rows:[{t:'confirmed lodging: <span class="warn">missing</span>', html:true},
+            {t:'offline image preference: <span class="warn">missing</span>', html:true},
+            {t:'mobility and dietary needs: provided', k:true}],
+      note:'Material gaps become questions; everything else can remain an editable placeholder.' },
+    log:[] },
+
+  { n:3, node:'n-organize', edge:'e3', zones:['z-brief'], tone:'safe', pkt:'DIR', dur:600,
+    inspector:{ tone:'safe', toneLabel:'ORGANIZED', title:'One folder owns the whole vacation',
+      rows:[{sec:'Folder rule'},
+            {from:'May 2027', field:'YYYYMM', to:'202705'},
+            {from:'primary place', field:'Destination', to:'Chamonix'},
+            {t:'202705_Chamonix/', k:true},
+            {t:'all generated files remain inside <span class="ok">&#10003;</span>', html:true}],
+      note:'The starting month and primary destination create a predictable home for every artifact.' },
+    log:[{badge:'ORGANIZED', tone:'green', t:'trip folder set to <b>202705_Chamonix/</b>'}] },
+
+  { n:4, node:'n-plan', edge:'e4', zones:['z-brief','z-planning'], tone:'az', pkt:'DAY', dur:700,
+    inspector:{ tone:'info', toneLabel:'NORMALIZED', title:'The route becomes a daily operating plan',
+      rows:[{head:true, h1:'DATE', h2:'LEG', h3:'ANCHOR'},
+            {from:'May 18', field:'Wiesbaden', to:'Strasbourg'},
+            {from:'May 20', field:'Strasbourg', to:'Annecy'},
+            {from:'May 22', field:'Annecy', to:'Chamonix'},
+            {t:'lodging &middot; meals &middot; activities &middot; parking', k:true}],
+      note:'Chronology, drive limits, check-in times, and reservations now share one timeline.' },
+    log:[] },
+
+  { n:5, node:'n-sources', edge:'e5', zones:['z-planning'], tone:'safe', pkt:'SRC', dur:650,
+    inspector:{ tone:'safe', toneLabel:'SOURCE CHECK', title:'Changeable facts go back to official sources',
+      rows:[{t:'opening hours <span class="ok">&#10003;</span>', html:true},
+            {t:'seasonal roads and closures <span class="ok">&#10003;</span>', html:true},
+            {t:'tolls, parking, and transit <span class="ok">&#10003;</span>', html:true},
+            {t:'listing title before photo use <span class="ok">&#10003;</span>', html:true}],
+      note:'Verified facts carry an access date; unresolved details remain clearly labeled.' },
+    log:[{badge:'VERIFIED', tone:'green', t:'official sources checked &middot; assumptions kept visible'}] },
+
+  { n:6, node:'n-builder', edge:'e6', zones:['z-planning'], tone:'safe', pkt:'FACT', dur:600,
+    inspector:{ tone:'safe', toneLabel:'READY TO BUILD', title:'The brief is now structured and sourced',
+      rows:[{t:'daily sequence: coherent', k:true},
+            {t:'route links: exact destinations', k:true},
+            {t:'restaurant listings: title matched', k:true},
+            {t:'offline behavior: explicitly selected', k:true}],
+      note:'The builder receives a plan, not a pile of disconnected notes.' },
+    log:[] },
+
+  { n:7, node:'n-itinerary', edge:'e7', zones:['z-planning','z-package'], tone:'az', pkt:'HTML', dur:900,
+    hot:'bnd-package',
+    inspector:{ tone:'info', toneLabel:'PRIMARY OUTPUT', title:'The interactive itinerary enters the trip folder',
+      rows:[{t:'index.html', k:true},
+            {t:'daily navigation &middot; routes &middot; lodging'},
+            {t:'activities &middot; meals &middot; warnings'},
+            {t:'responsive &middot; printable &middot; keyboard accessible'}],
+      note:'The first screen is the usable itinerary, not a marketing page.' },
+    log:[] },
+
+  { n:8, node:'n-support', edge:'e8', zones:['z-planning','z-package'], tone:'az', pkt:'KML', dur:850,
+    hot:'bnd-package',
+    inspector:{ tone:'info', toneLabel:'SUPPORTING OUTPUTS', title:'Maps and practical guides join the package',
+      rows:[{t:'categorized map.kml', k:true},
+            {t:'packing list.html'},
+            {t:'emergency guide.html'},
+            {t:'README.md &middot; assets &middot; helper scripts'}],
+      note:'Every supporting file stays beside the itinerary it belongs to.' },
+    log:[] },
+
+  { n:9, node:'n-validator', edge:'e9', zones:['z-package','z-planning'], tone:'safe', pkt:'CHK', dur:1000,
+    hot:'bnd-package', beat:{ fail:'n-revise', pass:'n-validator', boundary:'bnd-package' },
+    inspector:{ tone:'safe', toneLabel:'VALIDATION', title:'The package must prove it works',
+      rows:[{sec:'HTML'},
+            {t:'links &middot; images &middot; mobile layout &middot; keyboard', k:true},
+            {sec:'KML'},
+            {t:'XML &middot; coordinates &middot; styles &middot; map links', k:true},
+            {sec:'Content'},
+            {t:'dates &middot; chronology &middot; lodging &middot; route direction', k:true}],
+      note:'A failed check returns the package for revision; only a passing package proceeds.' },
+    log:[{badge:'VALIDATED', tone:'green', t:'HTML, KML, and content checks passed'}] },
+
+  { n:10, node:'n-ready', edge:'e10', zones:['z-planning','z-package'], tone:'safe', pkt:'OK', dur:900,
+    hot:'bnd-package', chatAfter:true,
+    chat:[{who:'agent', type:true, t:'Your <b>202705_Chamonix</b> trip package is organized, validated, and ready for review.'}],
+    inspector:{ tone:'safe', toneLabel:'HANDOFF', title:'One request becomes one complete trip package',
+      rows:[{t:'202705_Chamonix/', k:true},
+            {t:'index.html <span class="ok">&#10003;</span>', html:true},
+            {t:'maps and guides <span class="ok">&#10003;</span>', html:true},
+            {t:'assumptions and manual checks reported <span class="ok">&#10003;</span>', html:true}],
+      note:'Organized files make the vacation easier to review, refresh, and carry offline.' },
+    log:[{badge:'COMPLETE', tone:'green', t:'validated trip package handed back to the traveler'}] },
+];
+
+/* Optional: extra node -> step mappings, for nodes that are not the
+   landing node of any step but should still be clickable.
+   e.g. { 'n-reject':[1] }  (0-based step indexes) */
+const NODE_STEPS_EXTRA = { 'n-revise':[8] };
+
+/* ============================================================
+   ==================  ENGINE  —  DO NOT EDIT  ================
+   ============================================================ */
+const N = STEPS.length;
+
+/* ---- panel plumbing ---- */
+const PANEL_DEFS = {
+  chat:      { cls:'p-chat',    field:'chat',      mode:'append',  dots:true,  live:true  },
+  inspector: { cls:'p-insp',    field:'inspector', mode:'replace', dots:false, live:false },
+  log:       { cls:'p-log',     field:'log',       mode:'append',  dots:false, live:true  },
+  code:      { cls:'p-code',    field:'code',      mode:'replace', dots:false, live:false },
+  metrics:   { cls:'p-metrics', field:'metrics',   mode:'replace', dots:false, live:false }
+};
+
+const sim = $('sim');
+sim.style.gridTemplateColumns = PANELS.map(p => (p.weight||1)+'fr').join(' ');
+PANELS.forEach(p => {
+  const def = PANEL_DEFS[p.type];
+  if(!def){ console.error('unknown panel type: '+p.type); return; }
+  p._def = def;
+  p._field = p.field || def.field;
+  const el = document.createElement('div');
+  el.className = 'panel ' + def.cls;
+  el.id = 'panel-' + p.id;
+  let head = def.dots ? '<span class="d r"></span><span class="d y"></span><span class="d g"></span>' : '';
+  head += '<span class="pt">' + (p.title||'') + (p.sub ? ' &middot; <b>'+p.sub+'</b>' : '') + '</span>';
+  el.innerHTML = '<div class="phead">'+head+'</div>'
+               + '<div class="pbody"'+(def.live?' aria-live="polite"':'')+'></div>';
+  sim.appendChild(el);
+  p._body = el.querySelector('.pbody');
+});
+const livePanels = PANELS.filter(p => p._def);
+
+/* ---- load-time self-check ---- */
+console.assert(N > 0, 'STEPS must not be empty');
+STEPS.forEach((s,i) => {
+  console.assert(s.n === i+1, 'STEPS['+i+'].n should be '+(i+1));
+  console.assert(document.getElementById(s.node), 'missing node '+s.node);
+  if(s.edge) console.assert(document.getElementById(s.edge), 'missing edge '+s.edge);
+  (s.zones||[]).forEach(z => console.assert(document.getElementById(z), 'missing zone '+z));
+});
+
+/* clicking a node opens its first step; step badges do the same */
+const NODE_STEPS = {};
+STEPS.forEach((s,i) => { (NODE_STEPS[s.node] = NODE_STEPS[s.node]||[]).push(i); });
+Object.keys(NODE_STEPS_EXTRA).forEach(k => { NODE_STEPS[k] = NODE_STEPS_EXTRA[k]; });
+
+/* ============================================================
+   shared rendering
+   ============================================================ */
+const flow = $('flow'), packet = $('packet'), pktLabel = $('pkt-label');
+const allNodes = Array.from(flow.querySelectorAll('.node'));
+const allEdges = Array.from(flow.querySelectorAll('.edge'));
+const allZones = Array.from(flow.querySelectorAll('.zone'));
+const allNums  = Array.from(flow.querySelectorAll('.snum'));
+const allBnds  = Array.from(flow.querySelectorAll('.bline'));
+
+function nodeCenter(id){
+  const fo = document.getElementById(id).querySelector('foreignObject');
+  return { x:+fo.getAttribute('x') + fo.getAttribute('width')/2,
+           y:+fo.getAttribute('y') + fo.getAttribute('height')/2 };
+}
+function setPacket(x,y){ packet.setAttribute('transform', 'translate('+x+','+y+')'); }
+function packetTone(s){ packet.classList.remove('tone-warn','tone-safe');
+  if(s.tone==='warn') packet.classList.add('tone-warn');
+  if(s.tone==='safe') packet.classList.add('tone-safe');
+  pktLabel.textContent = s.pkt || ''; }
+
+function setActive(i){ /* i = step index, or -1 for none */
+  allNodes.forEach(n=>n.classList.remove('active','tone-warn'));
+  allEdges.forEach(e=>e.classList.remove('flowing','tone-warn','tone-safe'));
+  allZones.forEach(z=>z.classList.remove('active'));
+  allBnds.forEach(b=>b.classList.remove('hot'));
+  flow.classList.toggle('focused', i>=0);
+  allNums.forEach(g=>{ const st=+g.dataset.step-1;
+    g.classList.toggle('cur', st===i); g.classList.toggle('past', i>=0 && st<i); });
+  segs.forEach((sg,k)=>{ sg.classList.toggle('cur', k===i); sg.classList.toggle('past', i>=0 && k<i); });
+  $('cur').textContent = i>=0 ? String(i+1).padStart(2,'0') : '—';
+  if(i<0) return;
+  const s = STEPS[i];
+  const node = document.getElementById(s.node);
+  node.classList.add('active'); if(s.tone==='warn') node.classList.add('tone-warn');
+  if(s.edge){ const e=document.getElementById(s.edge); e.classList.add('flowing');
+    if(s.tone==='warn') e.classList.add('tone-warn');
+    if(s.tone==='safe') e.classList.add('tone-safe'); }
+  (s.zones||[]).forEach(z=>{ const el=document.getElementById(z); if(el) el.classList.add('active'); });
+  if(s.hot){ const b=document.getElementById(s.hot); if(b) b.classList.add('hot'); }
+}
+
+/* ---- progress segments ---- */
+const progress = $('progress'), segs=[];
+for(let i=0;i<N;i++){ const sg=document.createElement('span'); sg.className='seg';
+  sg.setAttribute('role','button'); sg.setAttribute('aria-label','Step '+(i+1));
+  sg.addEventListener('click',()=>{ if(intro) exitIntro(); simJump(i); });
+  progress.appendChild(sg); segs.push(sg); }
+$('tot').textContent = String(N).padStart(2,'0');
+
+/* ============================================================
+   run state
+   ============================================================ */
+let simCur = -1;                 /* last completed step index */
+let phase = 'idle';              /* idle | animating | waiting | done */
+let runToken = null;             /* cancel token for the in-flight step */
+let autoplay = false, autoTimer = null;
+
+function cancelRun(){ if(runToken) runToken.cancelled = true; runToken = null;
+  if(autoTimer){ clearTimeout(autoTimer); autoTimer=null; } }
+
+function easeInOutCubic(t){ return t<.5 ? 4*t*t*t : 1-Math.pow(-2*t+2,3)/2; }
+
+function flyPacket(edgeId, dur, token){
+  return new Promise(res=>{
+    const path = document.getElementById(edgeId);
+    const L = path.getTotalLength();
+    if(reduce){ const p=path.getPointAtLength(L); setPacket(p.x,p.y); return res(); }
+    const t0 = performance.now();
+    (function frame(now){
+      if(token.cancelled) return res();
+      const t = Math.min(1,(now-t0)/dur);
+      const p = path.getPointAtLength(easeInOutCubic(t)*L);
+      setPacket(p.x,p.y);
+      if(t<1) requestAnimationFrame(frame); else res();
+    })(t0);
+  });
+}
+function pulsePacket(nodeId, token){
+  return new Promise(res=>{
+    const c = nodeCenter(nodeId); setPacket(c.x,c.y);
+    if(reduce) return res();
+    packet.classList.remove('pulse'); void packet.getBBox; /* reflow-ish no-op for svg */
+    requestAnimationFrame(()=>packet.classList.add('pulse'));
+    setTimeout(()=>{ packet.classList.remove('pulse'); res(); }, token.cancelled?0:720);
+  });
+}
+function wait(ms, token){ return new Promise(r=>setTimeout(r, (reduce||_token_c(token))?0:ms));
+  function _token_c(t){ return t && t.cancelled; } }
+
+function typeInto(body, el, html, cps, token){
+  return new Promise(res=>{
+    /* type plain text, then swap in the rich html at the end */
+    const tmp = document.createElement('div'); tmp.innerHTML = html;
+    const txt = tmp.textContent;
+    if(reduce){ el.innerHTML = html; return res(); }
+    const cur = document.createElement('span'); cur.className='cursor';
+    let i = 0;
+    (function tick(){
+      if(token.cancelled){ el.innerHTML = html; return res(); }
+      if(i<=txt.length){
+        el.textContent = txt.slice(0,i); el.appendChild(cur);
+        i += 1 + (txt.length>160 ? 2 : 0);   /* long answers reveal faster */
+        setTimeout(tick, cps);
+        body.scrollTop = body.scrollHeight;
+      } else { el.innerHTML = html; res(); }
+    })();
+  });
+}
+function addMsg(body, ev){ const d=document.createElement('div'); d.className='msg '+ev.who;
+  body.appendChild(d); body.scrollTop = body.scrollHeight; return d; }
+
+async function playChat(s, token){
+  for(const p of livePanels){
+    if(p.type!=='chat') continue;
+    const evs = s[p._field]; if(!evs || !evs.length) continue;
+    for(const ev of evs){
+      const el = addMsg(p._body, ev);
+      if(ev.type) await typeInto(p._body, el, ev.t, 26, token);
+      else { el.innerHTML = ev.t; await wait(320, token); }
+      p._body.scrollTop = p._body.scrollHeight;
+      if(token.cancelled) return;
+    }
+  }
+}
+
+/* ---- panel renderers ---- */
+function inspectorHTML(ins){
+  let h = '<span class="itone '+ins.tone+'">'+ins.toneLabel+'</span>';
+  h += '<div class="ititle">'+ins.title+'</div>';
+  (ins.rows||[]).forEach(r=>{
+    if(r.sec){ h += '<div class="isec">'+r.sec+'</div>'; return; }
+    if(r.head){ h += '<div class="imap ihead"><span>'+(r.h1||'held')+'</span>'
+                   + '<span>'+(r.h2||'list')+'</span><span>'+(r.h3||'picked from it')+'</span></div>'; return; }
+    if(r.field){ h += '<div class="imap"><span class="mraw">'+r.from+'</span>'
+                    + '<span class="mfield"><span class="marr">&rarr;</span>'+r.field+'</span>'
+                    + '<span class="mval">'+r.to+'</span></div>'; return; }
+    h += '<div class="irow'+(r.strike?' strike':'')+'">'
+       + (r.k ? '<span class="k">'+r.t+'</span>' : r.t) + '</div>';
+  });
+  if(ins.note) h += '<div class="inote">'+ins.note+'</div>';
+  return h;
+}
+function codeHTML(pay){
+  let h = pay.title ? '<div class="ctitle">'+pay.title+'</div>' : '';
+  (pay.lines||[]).forEach((ln,idx)=>{
+    const o = (typeof ln === 'string') ? {t:ln} : ln;
+    const cls = 'cline'+(o.hl?' hl':'')+(o.add?' add':'')+(o.del?' del':'');
+    const num = pay.numbers ? '<span class="cn">'+(o.n!=null?o.n:idx+1)+'</span>' : '';
+    h += '<div class="'+cls+'">'+num+'<span class="ct">'+o.t+'</span></div>';
+  });
+  return h;
+}
+function metricsHTML(rows){
+  return (rows||[]).map(r =>
+    '<div class="mrow'+(r.tone?' '+r.tone:'')+'">'
+    + '<span class="mlabel">'+r.label+'</span>'
+    + '<span class="mvalue">'+r.value+'</span>'
+    + (r.delta ? '<span class="mdelta">'+r.delta+'</span>' : '<span></span>')
+    + '</div>').join('');
+}
+function renderReplace(p, payload){
+  const html = p.type==='inspector' ? inspectorHTML(payload)
+             : p.type==='code'      ? codeHTML(payload)
+             : metricsHTML(payload);
+  p._body.classList.remove('swap'); void p._body.offsetWidth;
+  p._body.innerHTML = html; p._body.classList.add('swap');
+}
+
+/* ---- log timestamps ---- */
+const clock0 = (function(){ const m = /^(\d+):(\d+):(\d+)$/.exec(CONFIG.clock.start||'00:00:00');
+  return m ? (+m[1])*3600 + (+m[2])*60 + (+m[3]) : 0; })();
+function stamp(n){ const t = clock0 + (n-1)*(CONFIG.clock.step||1);
+  const pad = v => String(v).padStart(2,'0');
+  return pad(Math.floor(t/3600)%24)+':'+pad(Math.floor(t/60)%60)+':'+pad(t%60); }
+
+function appendLog(p, s, rows, instant){
+  rows.forEach(a=>{
+    const empty = p._body.querySelector('.aempty'); if(empty) empty.remove();
+    const d = document.createElement('div'); d.className='arow';
+    if(instant) d.style.animation='none';
+    d.innerHTML = '<span class="ts">'+stamp(s.n)+'</span>'
+      + '<span class="abadge '+(a.tone||'az')+'">'+a.badge+'</span><span class="atxt">'+a.t+'</span>';
+    p._body.appendChild(d); p._body.scrollTop = p._body.scrollHeight;
+  });
+}
+
+/* everything except chat, which is animated separately */
+function commitStep(s, instant){
+  livePanels.forEach(p=>{
+    if(p.type==='chat') return;
+    const payload = s[p._field];
+    if(p._def.mode==='append'){ if(payload && payload.length) appendLog(p, s, payload, instant); }
+    else if(payload) renderReplace(p, payload);
+  });
+}
+function emptyHTML(p){
+  if(p._def.mode==='append') return p.empty ? '<div class="aempty">'+p.empty+'</div>' : '';
+  return '<div class="aempty" style="font-family:var(--sans)">'+(p.empty||CONFIG.readyText)+'</div>';
+}
+function resetPanels(){ livePanels.forEach(p=>{ p._body.innerHTML = emptyHTML(p); }); }
+
+async function beatFlash(b, token){
+  if(reduce || token.cancelled) return;
+  if(b.fail){ const f=$(b.fail); if(f){ f.classList.add('flash-red'); await wait(520, token); f.classList.remove('flash-red'); } }
+  if(b.pass){ const g=$(b.pass); if(g) g.classList.add('flash-green'); }
+  if(b.boundary){ const bd=$(b.boundary); if(bd) bd.classList.add('hot'); }
+  await wait(520, token);
+  if(b.pass){ const g=$(b.pass); if(g) g.classList.remove('flash-green'); }
+}
+
+async function playStep(i){
+  if(i<0 || i>=N || phase==='animating') return;
+  cancelRun(); const token = runToken = {cancelled:false};
+  phase='animating';
+  const s = STEPS[i];
+  setActive(i); packetTone(s); packet.classList.add('show');
+  /* park the packet at the start of the flight before moving */
+  if(s.edge){ const p0 = document.getElementById(s.edge).getPointAtLength(0); setPacket(p0.x,p0.y); }
+  else { const c=nodeCenter(s.node); setPacket(c.x,c.y); }
+  if(!s.chatAfter) await playChat(s, token);
+  if(token.cancelled) return;
+  if(s.edge) await flyPacket(s.edge, s.dur||700, token);
+  else await pulsePacket(s.node, token);
+  if(token.cancelled) return;
+  if(s.beat) await beatFlash(s.beat, token);
+  if(token.cancelled) return;
+  if(s.chatAfter) await playChat(s, token);
+  if(token.cancelled) return;
+  commitStep(s, false);
+  simCur = i;
+  phase = (i===N-1) ? 'done' : 'waiting';
+  if(phase==='waiting' && autoplay){ autoTimer = setTimeout(()=>playStep(simCur+1), CONFIG.autoplayMs); }
+  if(phase==='done'){ setAutoplay(false); }
+}
+
+/* pure rebuild of every panel + diagram state from STEPS[0..i] */
+function renderStateAt(i){
+  cancelRun();
+  resetPanels();
+  for(let k=0;k<=i;k++){
+    const s = STEPS[k];
+    livePanels.forEach(p=>{
+      if(p.type!=='chat') return;
+      (s[p._field]||[]).forEach(ev=>{ const el=addMsg(p._body, ev); el.innerHTML=ev.t; el.style.animation='none'; });
+    });
+    commitStep(s, true);
+  }
+  if(i>=0){ setActive(i); packetTone(STEPS[i]);
+    const c=nodeCenter(STEPS[i].node); setPacket(c.x,c.y); packet.classList.add('show'); }
+  else { setActive(-1); packet.classList.remove('show'); }
+  livePanels.forEach(p=>{ p._body.scrollTop = p._body.scrollHeight; });
+  simCur = i; phase = (i===N-1) ? 'done' : 'waiting';
+}
+function simJump(i){ renderStateAt(i); }
+
+function setAutoplay(v){ autoplay=v; const b=$('autop');
+  b.classList.toggle('on', v); b.setAttribute('aria-pressed', String(v));
+  b.textContent = 'Autoplay: '+(v?'on':'off');
+  if(!v && autoTimer){ clearTimeout(autoTimer); autoTimer=null; }
+  if(v && phase==='waiting'){ autoTimer=setTimeout(()=>playStep(simCur+1), 1200); } }
+
+/* ============================================================
+   run control — one view, and it opens paused
+   ============================================================ */
+/* Reset to the ready state. Deliberately does NOT play: nothing is sent until
+   the operator presses the run button (or Space). */
+function armSim(){
+  cancelRun();
+  renderStateAt(-1);
+  phase='idle';
+  setAutoplay(CONFIG.autoplayDefault === true);
+  history.replaceState(null,'',location.pathname.split('/').pop());
+}
+/* Send from the top. Pressing it mid-run restarts. */
+function runRequest(){ armSim(); setTimeout(()=>playStep(0), 120); }
+
+/* ---- chrome text from CONFIG ---- */
+$('m-sim').innerHTML = '<span class="tri">&#9654;</span> ' + CONFIG.runLabel;
+$('startbtn').innerHTML = '<span class="tri">&#9654;</span> ' + CONFIG.startLabel;
+if(CONFIG.deck && CONFIG.deck.href){
+  const d = $('deckbtn'); d.hidden = false;
+  d.setAttribute('href', CONFIG.deck.href);
+  d.innerHTML = '&#9666; ' + (CONFIG.deck.label || 'Slides');
+  d.addEventListener('click', e=>{
+    /* embedded in the deck's overlay: close it instead of navigating, so fullscreen survives */
+    if(window.parent !== window){ e.preventDefault(); window.parent.postMessage({type:'close-sim'}, '*'); }
+  });
+}
+$('m-sim').addEventListener('click', runRequest);
+$('autop').addEventListener('click', ()=>setAutoplay(!autoplay));
+
+/* ============================================================
+   intro state — diagram only + start button
+   ============================================================ */
+const stageEl = $('stage');
+let intro = stageEl.classList.contains('intro');
+function exitIntro(){ if(!intro) return; intro = false; stageEl.classList.remove('intro'); }
+$('startbtn').addEventListener('click', ()=>{ exitIntro(); armSim(); }); /* run view, paused */
+
+/* ============================================================
+   input wiring
+   ============================================================ */
+allNodes.forEach(n=>{
+  /* clicking a node scrubs the run to the step that node belongs to. No keydown
+     handler on purpose: Space must reach the window handler to advance the run. */
+  n.addEventListener('click', ()=>{ const list = NODE_STEPS[n.id]; if(!list) return;
+    if(intro) exitIntro();
+    simJump(list[0]); });
+});
+
+/* After any MOUSE click, drop focus from the clicked control. Otherwise the
+   focused button re-activates on the next Space press (e.g. the run button
+   restarting the sim instead of advancing it). Keyboard activation (detail 0)
+   keeps focus for accessibility. */
+document.addEventListener('click', e=>{
+  if(e.detail===0) return;
+  const el = e.target.closest ? e.target.closest('button,[tabindex]') : null;
+  if(el && el.blur) el.blur();
+});
+allNums.forEach(g=>g.addEventListener('click', ()=>{
+  const i = +g.dataset.step-1;
+  if(intro) exitIntro();
+  simJump(i);
+}));
+
+/* digit shortcuts: 1-9 then 0, -, = for steps 10-12 */
+const DIGITS = {};
+'1234567890-='.split('').forEach((ch,idx)=>{ if(idx < N) DIGITS[ch] = idx; });
+
+window.addEventListener('keydown', e=>{
+  if(intro && e.key!=='f' && e.key!=='F'){
+    /* leaving the intro lands in the run view READY, never mid-send. Only S sends. */
+    if(e.key==='s'||e.key==='S'){ exitIntro(); runRequest(); }
+    else if(e.key===' '||e.key==='Spacebar'||e.key==='Enter'||e.key==='ArrowRight'){
+      e.preventDefault(); exitIntro(); armSim();
+    } else if(e.key in DIGITS){ exitIntro(); simJump(DIGITS[e.key]); }
+    else if(e.key==='Escape'){ exitIntro(); armSim(); }
+    return;
+  }
+  switch(e.key){
+    case 'ArrowRight': case 'PageDown': case ' ': case 'Spacebar':
+      e.preventDefault();
+      if(phase==='waiting'||phase==='idle') playStep(simCur+1);
+      break;
+    case 'ArrowLeft': case 'PageUp':
+      e.preventDefault(); renderStateAt(Math.max(-1,simCur-1));
+      break;
+    case 'Home': e.preventDefault(); armSim(); break;
+    case 'End':  e.preventDefault(); renderStateAt(N-1); break;
+    case 's': case 'S': runRequest(); break;
+    case 'a': case 'A': setAutoplay(!autoplay); break;
+    case 'f': case 'F':
+      if(!document.fullscreenElement){ document.documentElement.requestFullscreen?.(); }
+      else { document.exitFullscreen?.(); }
+      break;
+    case 'Escape': armSim(); break;
+    default:
+      if(e.key in DIGITS) simJump(DIGITS[e.key]);
+  }
+});
+
+/* ---- init (hash deep-link: #4 scrubs the run to step 4, skipping the intro) ---- */
+const h = parseInt((location.hash||'').slice(1),10);
+if(!isNaN(h) && h>=1 && h<=N){ exitIntro(); renderStateAt(h-1); }
+else renderStateAt(-1);
+window.addEventListener('hashchange', ()=>{
+  const v = parseInt(location.hash.slice(1),10);
+  if(!isNaN(v) && v>=1 && v<=N && v-1!==simCur){ exitIntro(); renderStateAt(v-1); }
+});
+})();
+</script>
+</body>
+</html>

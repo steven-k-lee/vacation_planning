@@ -1,54 +1,91 @@
-# Dolomites Family Road Trip
+# ✈️ Vacation Planning Workspace
 
-An offline-friendly travel package for the October 2026 family road trip from Wiesbaden through Füssen and the Dolomites.
+> 🧭 A reusable home for building organized, practical, and offline-friendly travel packages.
 
-## Main Files
+This workspace keeps each vacation self-contained while sharing one repeatable planning workflow. A trip package can include an interactive itinerary, route maps, packing lists, emergency information, images, and maintenance scripts.
 
-| File | Purpose |
-| --- | --- |
-| `202610_Dolomites/index.html` | Interactive day-by-day itinerary with logistics, lodging, activities, routes, restaurant cards, embedded photos, and image lightboxes. |
-| `202610_Dolomites/dolomites_road_trip_categorized.kml` | Google Earth/My Maps placemarks grouped by day, with category icons, muted colors, descriptions, and Google Maps links. |
-| `202610_Dolomites/Dolomite Packing List.html` | Trip-specific family packing list. |
-| `202610_Dolomites/Italy Emergency_Guide.html` | Emergency contacts and travel-safety reference. |
-| `202610_Dolomites/embed_restaurant_images.ps1` | Rebuilds the itinerary's embedded restaurant thumbnails from verified Google listing photo URLs. |
-| `SKILLS.md` | Instructions for using the reusable Copilot travel-itinerary skill. |
+## 🗂️ Workspace Structure
 
-Additional HTML, KML, and KMZ files under `202610_Dolomites` are drafts or reference inputs. The files above are the maintained deliverables.
+Every trip lives in a workspace-root folder named `YYYYMM_Destination`:
 
-## Completed Work
+- `YYYY` is the four-digit year.
+- `MM` is the two-digit month in which travel begins.
+- `Destination` is the primary destination or concise regional name.
+- Spaces in destination names become underscores.
 
-- Built a responsive, printable five-day itinerary.
-- Added daily logistics, route links, lodging, activities, warnings, and restaurant recommendations.
-- Linked restaurant names and map placemarks to Google Maps.
-- Matched 20 restaurant thumbnails to their corresponding Google listings and embedded them for offline use.
-- Added mouse and keyboard lightbox support to itinerary and restaurant images.
-- Made restaurant cards open their listings while thumbnail clicks remain dedicated to the lightbox.
-- Categorized KML pins with meaningful Google My Maps icons and muted colors.
-- Converted Day 5 stops to restaurant pins and removed emoji from KML names.
-- Added one Maps link to every KML placemark.
-- Created a reusable travel-itinerary skill for future trips.
-
-## Open The Files
-
-The HTML files are self-contained and can be opened directly in a browser; no server or build step is required.
-
-Import `202610_Dolomites/dolomites_road_trip_categorized.kml` into Google My Maps or Google Earth to view the categorized trip map.
-
-## Refresh Restaurant Photos
-
-The helper expects the current 20 restaurant cards in their existing order. Run it from PowerShell in this folder:
-
-```powershell
-Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-& .\202610_Dolomites\embed_restaurant_images.ps1
+```mermaid
+flowchart TD
+	A[📁 Vacation planning workspace] --> B[🧳 YYYYMM_Destination]
+	B --> C[🌐 Itinerary]
+	B --> D[🗺️ Maps]
+	B --> E[🎒 Packing and emergency guides]
+	B --> F[📸 Assets and helper scripts]
+	A --> G[🧰 Shared skill and instructions]
 ```
 
-Google-hosted image URLs can expire or change. Before refreshing, confirm each URL in the helper still belongs to the named restaurant listing. The generated images remain embedded in the itinerary after the script finishes.
+For example, an October 2026 Dolomites trip uses `202610_Dolomites/`. If a trip crosses into another month, use its starting month. Existing trips keep their folder name unless they are intentionally renamed.
 
-## Important Travel Check
+## 🚀 Plan A New Trip
 
-Opening hours, seasonal lifts, mountain roads, toll systems, parking rules, prices, and emergency information can change. Reverify time-sensitive details with official sources shortly before departure.
+1. Gather the exact dates, travelers, route, lodging, transportation, activities, meal preferences, and accessibility needs.
+2. Decide which outputs are needed: itinerary HTML, KML map, packing list, emergency guide, or supporting scripts.
+3. Invoke the reusable Copilot skill with `/travel-itinerary-builder`.
+4. Confirm the proposed `YYYYMM_Destination/` folder name.
+5. Review assumptions and verify time-sensitive travel details before departure.
 
-## Reuse
+See [SKILLS.md](SKILLS.md) for invocation examples and complete usage instructions.
 
-The workspace skill is stored at `.github/skills/travel-itinerary-builder/SKILL.md`. See `SKILLS.md` for examples and setup guidance.
+## 📦 Recommended Trip Contents
+
+| Artifact | Purpose |
+| --- | --- |
+| `README.md` | 📝 Trip overview, maintained files, and trip-specific commands. |
+| `index.html` | 🗓️ Interactive day-by-day itinerary and primary entry point. |
+| `*.kml` or `*.kmz` | 🗺️ Categorized locations for Google My Maps or Google Earth. |
+| Packing list | 🎒 Clothing, equipment, documents, and traveler-specific supplies. |
+| Emergency guide | 🆘 Verified local contacts, medical resources, and critical phrases. |
+| Assets and scripts | 🛠️ Reproducible images, source data, and maintenance helpers. |
+
+File names may vary by destination, but all trip-specific content should remain inside its trip folder.
+
+## 🔄 Planning Workflow
+
+```mermaid
+flowchart LR
+	A[💬 Define the trip] --> B[🔎 Research official sources]
+	B --> C[🗓️ Build the daily plan]
+	C --> D[📍 Add routes and places]
+	D --> E[🧪 Validate files and links]
+	E --> F[✅ Recheck before departure]
+```
+
+### 1. 📝 Define
+
+Record dates, travelers, destinations, lodging, fixed reservations, transportation limits, dietary preferences, and desired outputs. Keep unknown details labeled as assumptions instead of presenting them as confirmed.
+
+### 2. 🔎 Research
+
+Prefer official sources for opening hours, seasonal closures, road restrictions, tolls, transit schedules, emergency contacts, and reservation requirements. Record when changeable facts were checked.
+
+### 3. 🧱 Build
+
+Create readable, responsive travel documents with direct map links and clear daily logistics. Keep offline assets embedded only when offline access is required; otherwise favor maintainable external resources.
+
+### 4. 🧪 Validate
+
+- Confirm dates, route direction, lodging sequence, and reservation times.
+- Test itinerary links, navigation, images, keyboard controls, and mobile layouts.
+- Parse KML as XML and verify coordinates, styles, names, and map links.
+- Flag unverified prices, schedules, seasonal roads, and operating hours.
+- Keep each trip's `README.md` current with its maintained files and commands.
+
+## 🧰 Shared Resources
+
+| Resource | Purpose |
+| --- | --- |
+| [SKILLS.md](SKILLS.md) | Usage guide and examples for the itinerary builder. |
+| [.github/skills/travel-itinerary-builder/SKILL.md](.github/skills/travel-itinerary-builder/SKILL.md) | Reusable Copilot workflow that creates and updates trip packages. |
+
+## ⚠️ Travel Safety
+
+Travel information changes. Reverify government guidance, emergency numbers, entry requirements, weather, road conditions, operating hours, and reservations with official sources shortly before departure. 🔎
