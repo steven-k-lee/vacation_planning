@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dolomites Family Road Trip App</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --accent-blue: #3498db;
+            --accent-green: #2ecc71;
+            --border-radius: 12px;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+        .app-container {
+            max-width: 480px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            padding-bottom: 40px;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 24px 16px;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0 0 8px 0;
+            font-size: 24px;
+            font-weight: 700;
+        }
+        .header p {
+            margin: 0;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .day-card {
+            background-color: var(--card-bg);
+            border-bottom: 8px solid var(--bg-color);
+            padding: 20px 16px;
+        }
+        .day-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 12px;
+            color: #1e3c72;
+            display: flex;
+            align-items: center;
+        }
+        .map-placeholder-group {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            overflow-x: auto;
+            padding-bottom: 4px;
+        }
+        .map-badge {
+            background-color: #eef2f7;
+            color: var(--accent-blue);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+            border: 1px solid #d6e0ea;
+        }
+        .info-block {
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+        .warning-block {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 10px 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13.5px;
+        }
+        .route-btn {
+            display: block;
+            background-color: #f8f9fa;
+            color: var(--accent-blue);
+            text-align: center;
+            padding: 10px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            margin-top: 8px;
+            border: 1px solid #e2e8f0;
+        }
+        .route-btn:hover {
+            background-color: #edf2f7;
+        }
+        .restaurant-toggle {
+            margin-top: 14px;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        summary {
+            padding: 12px 16px;
+            background-color: #f8fafc;
+            font-weight: 700;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            color: #2c3e50;
+        }
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        summary::before {
+            content: "▶";
+            font-size: 10px;
+            margin-right: 8px;
+            transition: transform 0.2s ease;
+            color: var(--accent-blue);
+        }
+        details[open] summary::before {
+            transform: rotate(90deg);
+        }
+        .restaurant-list {
+            padding: 8px;
+            background-color: #fff;
+        }
+        .res-card {
+            display: flex;
+            border: 1px solid #edf2f7;
+            border-radius: 8px;
+            padding: 8px;
+            margin-bottom: 8px;
+            background-color: #fbfcfd;
+        }
+        .res-card:last-child {
+            margin-bottom: 0;
+        }
+        .res-thumb {
+            width: 70px;
+            height: 70px;
+            border-radius: 6px;
+            background-color: #e2e8f0;
+            margin-right: 10px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background-size: cover;
+            background-position: center;
+        }
+        .res-info {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .res-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 2px;
+            gap: 4px;
+        }
+        .res-name {
+            font-weight: 700;
+            font-size: 13.5px;
+            color: #2c3e50;
+            text-decoration: none;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .res-name:hover {
+            color: var(--accent-blue);
+            text-decoration: underline;
+        }
+        .res-meta-inline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-bottom: 4px;
+            align-items: center;
+        }
+        .badge {
+            font-size: 10px;
+            font-weight: 600;
+            padding: 2px 5px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        .badge-star { background-color: #fef3c7; color: #d97706; }
+        .badge-price { background-color: #e0f2fe; color: #0369a1; }
+        .badge-food { background-color: #f1f5f9; color: #475569; }
+        .badge-meal { background-color: #dcfce7; color: #15803d; }
+        .res-hours {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+        .res-desc {
+            font-size: 12px;
+            color: #4a5568;
+            line-height: 1.4;
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <div class="header">
+        <h1>🏔 Dolomites Family Road Trip</h1>
+        <p>Family of 5 | Smartphone Travel App (Oct 8-12)</p>
+    </div>
+
+    <!-- DAY 1 -->
+    <div class="day-card">
+        <div class="day-title">🚗 Day 1 (Oct 8): Wiesbaden to Füssen</div>
+        
+        <div class="map-placeholder-group">
+            <span class="map-badge">📍 Wiesbaden</span>
+            <span class="map-badge">🛣 Road trip</span>
+            <span class="map-badge">🏁 Fussen</span>
+        </div>
+
+        <div class="info-block">
+            <strong>⏰ Logistics:</strong> Leave Wiesbaden at 3:00 PM to beat Frankfurt rush hour. Break at 6:30 PM near Ulm. Arrive in Füssen by 7:45 PM.
+        </div>
+        <div class="info-block">
+            <strong>🏨 Hotel:</strong> Villa Fantasia Budget Boutique Hotel (Ottostraße 1, Füssen). Use hotel guest parking or public Parkgarage P5 City.
+        </div>
+        <div class="info-block">
+            <strong>🍽 Restaurant Recommendations:</strong> Traditional town taverns. Order plain <strong>Wiener Schnitzel</strong> with fries or vegetable-free <strong>Kasspatzln</strong> (cheese egg noodles with fried onions).
+        </div>
+
+        <div class="restaurant-toggle">
+            <details>
+                <summary>🍴 Restaurant Options (Includes Lunch & Dinner)</summary>
+                <div class="restaurant-list">
+                    <!-- Option 1 -->
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1599940824399-b87987ceb72a?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=7040114834011529630" class="res-name" target="_blank">Madame Plüsch</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€20–60</span>
+                                <span class="badge badge-food">Bavarian</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Thu–Sun & Mon: 12:00 PM–4:00 PM, 5:00 PM–11:00 PM (Tue–Wed Closed)</div>
+                            <p class="res-desc">Charming, historic old-town tavern featuring beautifully styled rooms filled with 1920s retro decor. Highly celebrated for serving up massive, authentic portions of house specialties like cheese spätzle, tender pork roast, and excellent local beers.</p>
+                        </div>
+                    </div>
+                    <!-- Option 2 -->
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1544025162-d76694265947?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=5407654798807726445" class="res-name" target="_blank">Gasthaus Zum Schwanen</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.7</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Traditional</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Tue–Sat: 12:00 PM–10:00 PM (Sun–Mon Closed)</div>
+                            <p class="res-desc">Quaint and cozy historic inn offering a warm, authentic culinary Bavarian experience. The bustling kitchen cooks incredible regional standouts, ranging from crisp Wiener Schnitzels to savory, refined meat dishes served on a lovely pedestrian terrace.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1608897013039-887f21d8c804?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=1248782626113266947" class="res-name" target="_blank">Beim Ditsch</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.7</span>
+                                <span class="badge badge-price">€10–20</span>
+                                <span class="badge badge-food">Bavarian</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Tue & Sat: 11:30 AM–8:00 PM, Thu–Fri: 11:30 AM–9:00 PM</div>
+                            <p class="res-desc">Hidden down a quiet historic side street, this warm, family-run gem provides fantastic value for high-quality German comfort food. Visitors rave about their exceptionally crispy schnitzels, hearty beef roulades, and swift, multi-lingual hospitality.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=6686845822618116833" class="res-name" target="_blank">Beim Olivenbauer</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">German/Pizza</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 11:00 AM–10:00 PM</div>
+                            <p class="res-desc">A highly popular spot blending alpine tavern charm with a diverse menu of German classics and wood-oven pizza. Families love the quick service, massive portions, separate gluten-free fryer options, and dedicated indoor children's play room.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=12703369235159367009" class="res-name" target="_blank">Restaurant Ludwigs</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Regional</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 11:30 AM–10:00 PM</div>
+                            <p class="res-desc">Conveniently situated in the absolute heart of the pedestrian zone, this fast-paced restaurant features a modern Bavarian atmosphere. Offers an extensive family menu highlighting giant pork chops, dynamic custom burgers, and sweet kaiserschmarrn pancakes.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <a href="#" class="route-btn">Route to Füssen Hotel</a>
+    </div>
+
+    <!-- DAY 2 -->
+    <div class="day-card">
+        <div class="day-title">🚠 Day 2 (Oct 9): Crossing to Italy & Seceda</div>
+        
+        <div class="map-placeholder-group">
+            <span class="map-badge">🏔 Fern Pass / Brenner Pass</span>
+            <span class="map-badge">🛗 Seceda</span>
+            <span class="map-badge">🏨 Ortisei</span>
+        </div>
+
+        <div class="info-block">
+            <strong>🛗 Seceda Cable Car:</strong> Runs daily 8:30 AM – 5:30 PM (closes 5:00 PM after Oct 12). Schedules depend on season and weather conditions. Check live updates on the Official Website.
+        </div>
+        <div class="info-block">
+            <strong>⏰ Logistics:</strong> Leave at 8:30 AM via Fern Pass and Brenner Pass in full daylight. Arrive at Seceda terminal in Ortisei by 12:00 PM.
+        </div>
+        <div class="info-block">
+            <strong>🥾 Walk:</strong> Cable car up to 2,500m. The iconic ridge view is a completely flat, wide 10-minute stroll along a gravel service track.
+        </div>
+        <div class="info-block">
+            <strong>🏨 Hotel:</strong> Residence Cesa Sassela (Streda Sobosch 12, Ortisei). Free private parking included.
+        </div>
+        <div class="info-block">
+            <strong>🍽 Restaurant Recommendations:</strong><br>
+            · Lunch: Baita Sofie Hütte (plain hot fries/cheese slices at the top).<br>
+            · Dinner: Ristorante Pizzeria Cascade (plain wood-fired <strong>Margherita Pizza</strong> or butter pasta).
+        </div>
+
+        <div class="restaurant-toggle">
+            <details>
+                <summary>🍴 Restaurant Options (Includes Lunch & Dinner)</summary>
+                <div class="restaurant-list">
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=13706202825825408030" class="res-name" target="_blank">Mauriz Keller</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.4</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Tyrolean/Pizza</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon & Wed–Sun: 12:00 PM–2:00 PM, 5:00 PM–9:30 PM</div>
+                            <p class="res-desc">Tucked beautifully into a historic, rustic cellar tavern lined with wood accents right in the center. Delivers an extensive menu of homemade pastas served in massive iron pans, rich truffle risottos, and thin-crust, wood-fired pizzas.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1537047902294-62a40c20a6ae?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=8682673418426357915" class="res-name" target="_blank">Cascade Ristorante</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.3</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Italian</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 11:00 AM–11:00 PM (Continuous)</div>
+                            <p class="res-desc">Located just steps from the walking center, this spacious alpine eatery showcases an excellent combination of professional service and local tradition. Perfect for families wanting to sample authentic Tyrolean venison or simple wood-oven classics.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=10586329881944704012" class="res-name" target="_blank">Vedl Mulin</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.5</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Local/Italian</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–9:30 PM (Continuous)</div>
+                            <p class="res-desc">A highly popular local staple relying heavily on fresh ingredients sourced straight from Val Gardena alpine farmers. Extremely accommodating to families, preparing everything from tender spare ribs and giant schnitzels to basic child-friendly pastas.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1604068549290-dea0e4a305ca?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=6951785277256969958" class="res-name" target="_blank">Turonda Bistro</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Gourmet Pizza</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–10:30 PM (Continuous)</div>
+                            <p class="res-desc">A modern, highly rated bistro specializing in remarkably light, multi-cooked Neapolitan style crusts. The sleek, stylized wooden interior and relaxed environment provide an upscale yet entirely informal dynamic that easily satisfies both parents and kids.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1579751626657-72bc17010498?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=1143889825680639851" class="res-name" target="_blank">LaBar Ristorante</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Italian</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Tue–Sun: 12:00 PM–3:00 PM, 5:30 PM–10:30 PM</div>
+                            <p class="res-desc">Situated slightly outside the crowded center in Roncadizza, this woman-owned neighborhood spot is praised for serving up some of the best pizza in the area. Provides quick service, family pricing, and excellent takeaway options for easy dining.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <a href="#" class="route-btn">Route to Ortisei / Seceda Cableway</a>
+        <a href="#" class="route-btn">Route to Apartment Check-In</a>
+    </div>
+
+    <!-- DAY 3 -->
+    <div class="day-card">
+        <div class="day-title">☀ Day 3 (Oct 10): Alpe di Siusi E-Bike Loop</div>
+        
+        <div class="map-placeholder-group">
+            <span class="map-badge">🚲 Compatsch</span>
+            <span class="map-badge">🗺 Alpe di Siusi Loop</span>
+            <span class="map-badge">📸 Meadow Trails</span>
+        </div>
+
+        <div class="warning-block">
+            ⚠️ <strong>Warning:</strong> You must drive up the mountain access road before the strict <strong>9:00 AM private vehicle gate closure</strong>.
+        </div>
+
+        <div class="info-block">
+            <strong>⏰ Logistics:</strong> Depart apartment at 8:15 AM. Park at Compatsch P2 lot. Rent e-bikes and cruise wide meadow tracks effortlessly from 9:00 AM to 1:30 PM.
+        </div>
+        <div class="info-block">
+            <strong>🚲 Pre-Book E-Bikes:</strong> <a href="#">Book at Alpincenter</a> | <a href="#">Book at Sport Hans</a>
+        </div>
+        <div class="info-block">
+            <strong>🗺 Maps & Trails:</strong> <a href="#">Alpe di Siusi E-Bike Loop Map</a>
+        </div>
+        <div class="info-block">
+            <strong>🍽 Restaurant Recommendations:</strong><br>
+            · Lunch: Malga Sanon (meadow terrace, order plain <strong>Canederli allo Speck</strong>).<br>
+            · Dinner: L'Ostaria Ortisei (plain meat-and-bun <strong>Hamburgers</strong> with wedges).
+        </div>
+
+        <div class="restaurant-toggle">
+            <details>
+                <summary>🍴 Restaurant Options (Includes Lunch & Dinner)</summary>
+                <div class="restaurant-list">
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1548946522-4a313e8972a4?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=1515085009299937984" class="res-name" target="_blank">Tschötsch Alm</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.7</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Alpine</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Fri & Sun: 9:00 AM–5:00 PM</div>
+                            <p class="res-desc">Perched beautifully on the hiking trails of the Puflatsch slope, this alpine hut features a massive panoramic sun terrace. Excellent for enjoying re-imagined regional classics like speck dumplings and house-made pasta scraps right during your loop.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=124182726937677424" class="res-name" target="_blank">Huber Schwaige</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.9</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Bio-Alpine</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 9:00 AM–5:00 PM</div>
+                            <p class="res-desc">An incredible, top-rated bio-farm hut featuring unmatched meadow views and a direct outdoor petting zoo and playground for kids. Famous for its artisan cheese platters, house-smoked sausages, and exceptional, massive kaiserschmarrn pancakes.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=17476830500282159205" class="res-name" target="_blank">Ristorante Alpi</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.4</span>
+                                <span class="badge badge-price">€10–20</span>
+                                <span class="badge badge-food">Italian/Pizza</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–2:30 PM, 7:00 PM–10:00 PM</div>
+                            <p class="res-desc">Perfectly nestled in the central Compatsch hub, this casual guesthouse restaurant offers rapid service and great value. Highly recommended for family sit-down lunches or filling pizza dinners immediately following your mountain cycling excursion.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=3345268833835538397" class="res-name" target="_blank">Alpina Chalet</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.4</span>
+                                <span class="badge badge-price">€10–40</span>
+                                <span class="badge badge-food">Alpine Grill</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 11:00 AM–10:30 PM</div>
+                            <p class="res-desc">Offering a trendy, mountain-chic chalet atmosphere with magnificent valley backdrops. Outdoor dining tables paired with cozy individual stone fireplaces make it a special spot for parents to enjoy premium local steaks while kids eat fresh artisan sliders.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?q=Almgasthof+Mont+Seuc+Alpe+di+Siusi" class="res-name" target="_blank">Almgasthof Mont Seuc</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.4</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Alpine Fusion</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 8:30 AM–6:00 PM</div>
+                            <p class="res-desc">Positioned right at the high mountain cableway station, this establishment serves up legendary unobstructed views. Highly family-friendly, complete with a massive outdoor kids' playground and an excellent terrace for viewing the sunset over the peaks.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <a href="#" class="route-btn">Route to Bike Rental Parking</a>
+    </div>
+
+    <!-- DAY 4 -->
+    <div class="day-card">
+        <div class="day-title">🚣 Day 4 (Oct 11): Lake Boats & Tre Cime Towers</div>
+        
+        <div class="map-placeholder-group">
+            <span class="map-badge">🚣 Lago di Braies</span>
+            <span class="map-badge">⛰️ Tre Cime Towers</span>
+            <span class="map-badge">🛏️ Dobbiaco</span>
+        </div>
+
+        <div class="warning-block">
+            ⚠️ <strong>Warning:</strong> Pre-book your 12-hour high-altitude vehicle entry toll pass (€40) online at <strong>pass.auronzo.info</strong> before arriving.
+        </div>
+
+        <div class="info-block">
+            <strong>⏰ Logistics:</strong> Check out at 8:30 AM. Arrive at Lago di Braies at 9:45 AM. Rent a wooden rowboat fits all 5. Walk flat shoreline track.
+        </div>
+        <div class="info-block">
+            <strong>🥾 Tre Cime Walk:</strong> Drive south to Tre Cime at 12:30 PM. Walk <strong>Path 101 to Rifugio Lavaredo</strong>—a completely wide, flat, gravel road directly underneath giant vertical rock towers.
+        </div>
+        <div class="info-block">
+            <strong>🗺 Hiking Tracks:</strong> <a href="#">Path 101 to Rifugio Lavaredo Trail Map</a>
+        </div>
+        <div class="info-block">
+            <strong>🏨 Hotel:</strong> B&B Hotel Heidi (Gratsch 6, Via Grazze 6, Dobbiaco). Free private parking on-site.
+        </div>
+        <div class="info-block">
+            <strong>🍽 Restaurant Recommendations:</strong><br>
+            · Lunch: Baita Langen Hof (beef <strong>Gulasch con Canederli</strong> in plain gravy).<br>
+            · Dinner: Snetonstube (creamy bacon egg <strong>Gnocchetti Spätzle</strong>).
+        </div>
+
+        <div class="restaurant-toggle">
+            <details>
+                <summary>🍴 Restaurant Options (Includes Lunch & Dinner)</summary>
+                <div class="restaurant-list">
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1543339308-43e59d6b73a6?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=515526284298108026" class="res-name" target="_blank">Winkelkeller</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.5</span>
+                                <span class="badge badge-price">€30–40</span>
+                                <span class="badge badge-food">Tyrolean</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–2:00 PM, 6:00 PM–9:30 PM</div>
+                            <p class="res-desc">A beautifully charming, historic restaurant featuring a cozy fireplace indoors and a lively garden outdoor area. Treats hikers to incredible Tyrolean meat platters, slow-cooked deer goulash, and traditional dumplings prepared three distinct ways.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1559339352-11d035aa65de?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=9676131866383976176" class="res-name" target="_blank">Schlosskeller</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.4</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Tavern/BBQ</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Tue–Sun: 12:00 PM–3:00 PM, 5:00 PM–11:00 PM</div>
+                            <p class="res-desc">Tucked safely inside an authentic, wood-clad castle cellar tavern, this atmospheric gem provides amazing value. The family-friendly spaces are highly popular for customized grilled meat skewers, local venison, and rich cheese spätzle.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1560614382-33bd4edd1b42?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=9294395666247508691" class="res-name" target="_blank">Gasthaus Weber</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.5</span>
+                                <span class="badge badge-price">€20–30</span>
+                                <span class="badge badge-food">Homestyle</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–2:00 PM, 6:00 PM–9:00 PM</div>
+                            <p class="res-desc">A quaint, deeply authentic mountain chalet trattoria that identifies as a proud, women-owned establishment. Celebrated for serving simple comfort classics like savory barley soup, polenta with sausage, and fresh apple strudel with heavy cream.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?cid=13478937938864298511" class="res-name" target="_blank">Kugler Speckstube</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.7</span>
+                                <span class="badge badge-price">€30–40</span>
+                                <span class="badge badge-food">Alpine/Speck</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon & Wed–Sun: 10:00 AM–3:00 PM, 6:00 PM–11:30 PM</div>
+                            <p class="res-desc">Emulating a classic farm cottage, this cozy spot is one of the very few high-altitude places that still cures its own artisan speck and ham. Features grand, welcoming dining halls optimized for family groups traveling with young toddlers.</p>
+                        </div>
+                    </div>
+                    <div class="res-card">
+                        <div class="res-thumb" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=100&auto=format&fit=crop&q=60');"></div>
+                        <div class="res-info">
+                            <div class="res-header">
+                                <a href="https://maps.google.com/maps?q=Hans+Pizzeria+Restaurant+Dobbiaco" class="res-name" target="_blank">Hans Pizzeria</a>
+                            </div>
+                            <div class="res-meta-inline">
+                                <span class="badge badge-star">⭐ 4.6</span>
+                                <span class="badge badge-price">€10–20</span>
+                                <span class="badge badge-food">Pizza/Pasta</span>
+                                <span class="badge badge-meal">Lunch & Dinner</span>
+                            </div>
+                            <div class="res-hours">🕒 Mon–Sun: 12:00 PM–3:00 PM, 5:30 PM–11:00 PM</div>
+                            <p class="res-desc">Boasting thousands of highly rated reviews, this sleek, modern eatery is entirely lined with beautiful South Tyrolean wood paneling. Offers an expansive, fast menu of standard Italian pizzas, fresh pastas, and local wines that please all ages.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+        </div>
+
+        <a href="#" class="route-btn">Route to Lago di Braies P2</a>
+        <a href="#" class="route-btn">Route to Tre Cime Parking</a>
+        <a href="#" class="route-btn">Route to B&B Hotel Heidi</a>
+    </div>
+
+    <!-- DAY 5 -->
+    <div class="day-card">
+        <div class="day-title">🏎 Day 5 (Oct 12): Daylight Journey Home</div>
+
+        <div class="info-block">
+            <strong>⏰ Logistics:</strong> Leave Dobbiaco hotel at 8:30 AM. Cross Brenner Pass in daylight. Safe, stress-free arrival back in Wiesbaden by 4:30 PM.
+        </div>
+        
+        <div class="info-block">
+            <strong>🍽 Curated Lunch & Dinner Stops on Route:</strong>
+            <ol style="margin: 4px 0; padding-left: 20px; font-size: 13.5px;">
+                <li style="margin-bottom: 6px;"><strong>Schlosskeller (Dobbiaco, Italy)</strong> – Traditional cheese dumplings inside an authentic castle cellar tavern. Open for lunch and dinner.</li>
+                <li style="margin-bottom: 6px;"><strong>Stiftskeller (Innsbruck, Austria)</strong> – Perfect midway transit stop off the Brenner highway for classic, giant Wiener Schnitzels. Continuous lunch and dinner service.</li>
+                <li style="margin-bottom: 0;"><strong>Sofa Cafe & Restaurant (Ehrwald, Austria)</strong> – Cozy family road stop directly on the scenic Fern Pass motorway loop, serving dynamic comfort plates all day.</li>
+            </ol>
+        </div>
+
+        <a href="#" class="route-btn">Route Home to Wiesbaden</a>
+    </div>
+</div>
+
+</body>
+</html>
