@@ -46,7 +46,7 @@
       <name>Day 1 (Oct 8): Wiesbaden to Füssen</name>
       <Placemark>
         <name>Villa Fantasia Budget Boutique Hotel</name>
-        <description><![CDATA[Hotel: Ottostraße 1, Füssen. Use guest parking or public Parkgarage P5 City.<br/><a href="https://www.google.com/maps/search/?api=1&query=Villa+Fantasia+Budget+Boutique+Hotel+F%C3%BCssen">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Hotel: Ottostraße 1, Füssen. Use guest parking or public Parkgarage P5 City.<br/><a href="https://www.google.com/maps/search/?api=1&query=Villa+Fantasia+Budget+Boutique+Hotel+F%C3%BCssen" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#hotel-style</styleUrl>
         <Point>
           <coordinates>10.7011,47.5714,0</coordinates>
@@ -54,7 +54,7 @@
       </Placemark>
       <Placemark>
         <name>Madame Plüsch</name>
-        <description><![CDATA[Restaurant. 4.6. Bavarian. 1920s retro decor.<br/><a href="https://maps.google.com/maps?cid=7040114834011529630">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. Bavarian. 1920s retro decor.<br/><a href="https://maps.google.com/maps?cid=7040114834011529630" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.7022,47.5681,0</coordinates>
@@ -62,7 +62,7 @@
       </Placemark>
       <Placemark>
         <name>Gasthaus Zum Schwanen</name>
-        <description><![CDATA[Restaurant. 4.7. Traditional Bavarian cuisine.<br/><a href="https://maps.google.com/maps?cid=5407654798807726445">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.7. Traditional Bavarian cuisine.<br/><a href="https://maps.google.com/maps?cid=5407654798807726445" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.7006,47.5694,0</coordinates>
@@ -70,7 +70,7 @@
       </Placemark>
       <Placemark>
         <name>Beim Ditsch</name>
-        <description><![CDATA[Restaurant. 4.7. Great value German comfort food.<br/><a href="https://maps.google.com/maps?cid=1248782626113266947">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.7. Great value German comfort food.<br/><a href="https://maps.google.com/maps?cid=1248782626113266947" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.7018,47.5691,0</coordinates>
@@ -78,7 +78,7 @@
       </Placemark>
       <Placemark>
         <name>Beim Olivenbauer</name>
-        <description><![CDATA[Restaurant. 4.6. Alpine charm, gluten-free fryer options, kids indoor playroom.<br/><a href="https://maps.google.com/maps?cid=6686845822618116833">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. Alpine charm, gluten-free fryer options, kids indoor playroom.<br/><a href="https://maps.google.com/maps?cid=6686845822618116833" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.6975,47.5672,0</coordinates>
@@ -86,7 +86,7 @@
       </Placemark>
       <Placemark>
         <name>Restaurant Ludwigs</name>
-        <description><![CDATA[Restaurant. 4.6. Central pedestrian zone, family menu.<br/><a href="https://maps.google.com/maps?cid=12703369235159367009">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. Central pedestrian zone, family menu.<br/><a href="https://maps.google.com/maps?cid=12703369235159367009" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.7013,47.5689,0</coordinates>
@@ -97,7 +97,7 @@
       <name>Day 2 (Oct 9): Crossing to Italy &amp; Seceda</name>
       <Placemark>
         <name>Seceda Cable Car Terminal (Ortisei)</name>
-        <description><![CDATA[Activity: Runs daily 8:30 AM - 5:30 PM. Cable car up to 2,500m.<br/><a href="https://www.google.com/maps/search/?api=1&query=Seceda+Cableway+Ortisei">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Activity: Runs daily 8:30 AM - 5:30 PM. Cable car up to 2,500m.<br/><a href="https://www.google.com/maps/search/?api=1&query=Seceda+Cableway+Ortisei" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#activity-style</styleUrl>
         <Point>
           <coordinates>11.6756,46.5764,0</coordinates>
@@ -105,7 +105,7 @@
       </Placemark>
       <Placemark>
         <name>Residence Cesa Sassela</name>
-        <description><![CDATA[Hotel: Streda Sobosch 12, Ortisei. Free private parking included.<br/><a href="https://www.google.com/maps/search/?api=1&query=Residence+Cesa+Sassela+Ortisei">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Hotel: Streda Sobosch 12, Ortisei. Free private parking included.<br/><a href="https://www.google.com/maps/search/?api=1&query=Residence+Cesa+Sassela+Ortisei" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#hotel-style</styleUrl>
         <Point>
           <coordinates>11.6672,46.5768,0</coordinates>
@@ -113,7 +113,7 @@
       </Placemark>
       <Placemark>
         <name>Mauriz Keller</name>
-        <description><![CDATA[Restaurant. 4.4. Rustic cellar tavern, homemade pastas.<br/><a href="https://maps.google.com/maps?cid=13706202825825408030">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.4. Rustic cellar tavern, homemade pastas.<br/><a href="https://maps.google.com/maps?cid=13706202825825408030" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6728,46.5744,0</coordinates>
@@ -121,7 +121,7 @@
       </Placemark>
       <Placemark>
         <name>Cascade Ristorante</name>
-        <description><![CDATA[Restaurant. 4.3. Steps from walking center, wood-oven classics.<br/><a href="https://maps.google.com/maps?cid=8682673418426357915">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.3. Steps from walking center, wood-oven classics.<br/><a href="https://maps.google.com/maps?cid=8682673418426357915" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6708,46.5728,0</coordinates>
@@ -129,7 +129,7 @@
       </Placemark>
       <Placemark>
         <name>Vedl Mulin</name>
-        <description><![CDATA[Restaurant. 4.5. Fresh ingredients from Val Gardena farmers.<br/><a href="https://maps.google.com/maps?cid=10586329881944704012">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.5. Fresh ingredients from Val Gardena farmers.<br/><a href="https://maps.google.com/maps?cid=10586329881944704012" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6719,46.5739,0</coordinates>
@@ -137,7 +137,7 @@
       </Placemark>
       <Placemark>
         <name>Turonda Bistro</name>
-        <description><![CDATA[Restaurant. 4.6. Modern, Neapolitan style crusts.<br/><a href="https://maps.google.com/maps?cid=6951785277256969958">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. Modern, Neapolitan style crusts.<br/><a href="https://maps.google.com/maps?cid=6951785277256969958" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6722,46.5747,0</coordinates>
@@ -145,7 +145,7 @@
       </Placemark>
       <Placemark>
         <name>LaBar Ristorante</name>
-        <description><![CDATA[Restaurant. 4.6. Located in Roncadizza, excellent pizza and takeaway.<br/><a href="https://maps.google.com/maps?cid=1143889825680639851">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. Located in Roncadizza, excellent pizza and takeaway.<br/><a href="https://maps.google.com/maps?cid=1143889825680639851" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6444,46.5661,0</coordinates>
@@ -156,7 +156,7 @@
       <name>Day 3 (Oct 10): Alpe di Siusi E-Bike Loop</name>
       <Placemark>
         <name>Compatsch P2 Parking Lot</name>
-        <description><![CDATA[Logistics: Drive up access road before strict 9:00 AM private vehicle gate closure.<br/><a href="https://www.google.com/maps/search/?api=1&query=Compatsch+P2+Parking">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Logistics: Drive up access road before strict 9:00 AM private vehicle gate closure.<br/><a href="https://www.google.com/maps/search/?api=1&query=Compatsch+P2+Parking" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#logistics-style</styleUrl>
         <Point>
           <coordinates>11.6166,46.5414,0</coordinates>
@@ -164,7 +164,7 @@
       </Placemark>
       <Placemark>
         <name>Tschötsch Alm</name>
-        <description><![CDATA[Restaurant. 4.7. Alpine hut with panoramic sun terrace.<br/><a href="https://maps.google.com/maps?cid=1515085009299937984">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.7. Alpine hut with panoramic sun terrace.<br/><a href="https://maps.google.com/maps?cid=1515085009299937984" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6353,46.5375,0</coordinates>
@@ -172,7 +172,7 @@
       </Placemark>
       <Placemark>
         <name>Huber Schwaige</name>
-        <description><![CDATA[Restaurant. 4.9. Bio-farm hut, meadow views, petting zoo & playground for kids.<br/><a href="https://maps.google.com/maps?cid=124182726937677424">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.9. Bio-farm hut, meadow views, petting zoo & playground for kids.<br/><a href="https://maps.google.com/maps?cid=124182726937677424" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6547,46.5208,0</coordinates>
@@ -180,7 +180,7 @@
       </Placemark>
       <Placemark>
         <name>Ristorante Alpi</name>
-        <description><![CDATA[Restaurant. 4.4. Central Compatsch hub, rapid service.<br/><a href="https://maps.google.com/maps?cid=17476830500282159205">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.4. Central Compatsch hub, rapid service.<br/><a href="https://maps.google.com/maps?cid=17476830500282159205" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6158,46.5411,0</coordinates>
@@ -188,7 +188,7 @@
       </Placemark>
       <Placemark>
         <name>Alpina Chalet</name>
-        <description><![CDATA[Restaurant. 4.4. Mountain-chic atmosphere, outdoor tables with stone fireplaces.<br/><a href="https://maps.google.com/maps?cid=3345268833835538397">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.4. Mountain-chic atmosphere, outdoor tables with stone fireplaces.<br/><a href="https://maps.google.com/maps?cid=3345268833835538397" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6178,46.5419,0</coordinates>
@@ -196,7 +196,7 @@
       </Placemark>
       <Placemark>
         <name>Almgasthof Mont Seuc</name>
-        <description><![CDATA[Restaurant. 4.4. Right at the high mountain cableway station, massive kids playground.<br/><a href="https://maps.google.com/maps?q=Almgasthof+Mont+Seuc+Alpe+di+Siusi">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.4. Right at the high mountain cableway station, massive kids playground.<br/><a href="https://maps.google.com/maps?q=Almgasthof+Mont+Seuc+Alpe+di+Siusi" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.6544,46.5492,0</coordinates>
@@ -207,7 +207,7 @@
       <name>Day 4 (Oct 11): Lake Boats &amp; Tre Cime Towers</name>
       <Placemark>
         <name>Lago di Braies</name>
-        <description><![CDATA[Activity: Arrive at 9:45 AM. Wooden rowboat rentals, flat shoreline track.<br/><a href="https://www.google.com/maps/search/?api=1&query=Lago+di+Braies">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Activity: Arrive at 9:45 AM. Wooden rowboat rentals, flat shoreline track.<br/><a href="https://www.google.com/maps/search/?api=1&query=Lago+di+Braies" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#activity-style</styleUrl>
         <Point>
           <coordinates>12.0850,46.6947,0</coordinates>
@@ -215,7 +215,7 @@
       </Placemark>
       <Placemark>
         <name>Tre Cime di Lavaredo Parking Lot</name>
-        <description><![CDATA[Logistics: Pre-book 12-hour entry pass online at pass.auronzo.info. Path 101 to Rifugio Lavaredo starts here.<br/><a href="https://www.google.com/maps/search/?api=1&query=Rifugio+Auronzo+Tre+Cime">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Logistics: Pre-book 12-hour entry pass online at pass.auronzo.info. Path 101 to Rifugio Lavaredo starts here.<br/><a href="https://www.google.com/maps/search/?api=1&query=Rifugio+Auronzo+Tre+Cime" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#logistics-style</styleUrl>
         <Point>
           <coordinates>12.2961,46.6127,0</coordinates>
@@ -223,7 +223,7 @@
       </Placemark>
       <Placemark>
         <name>B&amp;B Hotel Heidi</name>
-        <description><![CDATA[Hotel: Gratsch 6, Via Grazze 6, Dobbiaco. Free private parking on-site.<br/><a href="https://www.google.com/maps/search/?api=1&query=B%26B+Hotel+Heidi+Dobbiaco">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Hotel: Gratsch 6, Via Grazze 6, Dobbiaco. Free private parking on-site.<br/><a href="https://www.google.com/maps/search/?api=1&query=B%26B+Hotel+Heidi+Dobbiaco" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#hotel-style</styleUrl>
         <Point>
           <coordinates>12.2131,46.7261,0</coordinates>
@@ -231,7 +231,7 @@
       </Placemark>
       <Placemark>
         <name>Winkelkeller</name>
-        <description><![CDATA[Restaurant. 4.5. Historic Tyrolean restaurant, cozy fireplace and garden.<br/><a href="https://maps.google.com/maps?cid=515526284298108026">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.5. Historic Tyrolean restaurant, cozy fireplace and garden.<br/><a href="https://maps.google.com/maps?cid=515526284298108026" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>12.2228,46.7356,0</coordinates>
@@ -239,7 +239,7 @@
       </Placemark>
       <Placemark>
         <name>Schlosskeller</name>
-        <description><![CDATA[Restaurant. 4.4. Wood-clad castle cellar tavern, great value.<br/><a href="https://maps.google.com/maps?cid=9676131866383976176">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.4. Wood-clad castle cellar tavern, great value.<br/><a href="https://maps.google.com/maps?cid=9676131866383976176" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>12.2217,46.7381,0</coordinates>
@@ -247,7 +247,7 @@
       </Placemark>
       <Placemark>
         <name>Gasthaus Weber</name>
-        <description><![CDATA[Restaurant. 4.5. Women-owned authentic mountain chalet trattoria.<br/><a href="https://maps.google.com/maps?cid=9294395666247508691">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.5. Women-owned authentic mountain chalet trattoria.<br/><a href="https://maps.google.com/maps?cid=9294395666247508691" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>12.2036,46.7114,0</coordinates>
@@ -255,7 +255,7 @@
       </Placemark>
       <Placemark>
         <name>Kugler Speckstube</name>
-        <description><![CDATA[Restaurant. 4.7. Classic farm cottage curing its own artisan speck.<br/><a href="https://maps.google.com/maps?cid=13478937938864298511">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.7. Classic farm cottage curing its own artisan speck.<br/><a href="https://maps.google.com/maps?cid=13478937938864298511" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>12.2342,46.7417,0</coordinates>
@@ -263,7 +263,7 @@
       </Placemark>
       <Placemark>
         <name>Hans Pizzeria</name>
-        <description><![CDATA[Restaurant. 4.6. South Tyrolean wood paneling, massive pizza/pasta menu.<br/><a href="https://maps.google.com/maps?q=Hans+Pizzeria+Restaurant+Dobbiaco">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant. 4.6. South Tyrolean wood paneling, massive pizza/pasta menu.<br/><a href="https://maps.google.com/maps?q=Hans+Pizzeria+Restaurant+Dobbiaco" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>12.2225,46.7344,0</coordinates>
@@ -274,7 +274,7 @@
       <name>Day 5 (Oct 12): Daylight Journey Home</name>
       <Placemark>
         <name>Stiftskeller (Innsbruck)</name>
-        <description><![CDATA[Restaurant: Perfect midway stop off the Brenner highway for classic Wiener Schnitzels.<br/><a href="https://www.google.com/maps/search/?api=1&query=Stiftskeller+Innsbruck">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant: Perfect midway stop off the Brenner highway for classic Wiener Schnitzels.<br/><a href="https://www.google.com/maps/search/?api=1&query=Stiftskeller+Innsbruck" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>11.3953,47.2686,0</coordinates>
@@ -282,7 +282,7 @@
       </Placemark>
       <Placemark>
         <name>Sofa Cafe &amp; Restaurant (Ehrwald)</name>
-        <description><![CDATA[Restaurant: Cozy family road stop directly on the scenic Fern Pass motorway loop.<br/><a href="https://www.google.com/maps/search/?api=1&query=Sofa+Cafe+Restaurant+Ehrwald">Open in Google Maps</a>]]></description>
+        <description><![CDATA[Restaurant: Cozy family road stop directly on the scenic Fern Pass motorway loop.<br/><a href="https://www.google.com/maps/search/?api=1&query=Sofa+Cafe+Restaurant+Ehrwald" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>]]></description>
         <styleUrl>#restaurant-style</styleUrl>
         <Point>
           <coordinates>10.9169,47.3986,0</coordinates>

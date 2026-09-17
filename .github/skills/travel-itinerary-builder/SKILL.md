@@ -89,7 +89,8 @@ Create the actual itinerary as the first screen, not a marketing page. Include:
 - Compact trip summary and daily navigation
 - One clearly separated section per day
 - Dates, route, logistics, activities, meals, lodging, and warnings
-- Direct route and listing links that open in a new tab with `noopener`
+- Every `<a href>` opens in a new tab or window with `target="_blank" rel="noopener noreferrer"`
+- Dynamically created anchors receive `target="_blank"` and `rel="noopener noreferrer"` before insertion
 - Responsive layouts for desktop and mobile
 - Stable image dimensions that prevent layout shift
 - Print-friendly behavior where practical
@@ -117,7 +118,7 @@ Restaurant thumbnails must:
 - Have `role="button"`, `tabindex="0"`, and a descriptive `aria-label`
 - Stop propagation so the parent restaurant card does not open Google Maps
 
-The remainder of the restaurant card may open its Google Maps listing. Keep the restaurant name as a normal anchor.
+The remainder of the restaurant card may open its Google Maps listing. Keep the restaurant name as a normal anchor with `target="_blank" rel="noopener noreferrer"`. If a card uses `window.open`, pass `_blank` and prevent the opened page from receiving an `opener` reference.
 
 ### 6. 🖼️ Add the Lightbox
 
@@ -140,7 +141,7 @@ Create valid KML 2.2 with folders grouped by day or category. For every placemar
 - Use meaningful Google My Maps composite icons instead of generic pushpins
 - Preserve precise coordinates
 - Put formatted description HTML inside CDATA
-- Add exactly one `Open in Google Maps` link
+- Add exactly one `Open in Google Maps` link with `target="_blank" rel="noopener noreferrer"` where the KML consumer supports HTML anchor attributes
 
 Prefer exact itinerary listing URLs for matching places. Use precise search URLs only when no exact listing URL exists.
 
@@ -160,6 +161,9 @@ After editing, run the narrowest executable checks available.
 
 - Confirm expected day and restaurant counts.
 - Confirm every route and restaurant link has a nonempty destination.
+- Inspect every `a[href]` and confirm `target` is `_blank` and `rel` contains both `noopener` and `noreferrer`.
+- Include dynamically created anchors, file links, source citations, lodging links, navigation links, and links inside hidden or collapsible content.
+- Exercise card-level or scripted link actions and confirm they open a separate browsing context without exposing `window.opener`.
 - Confirm all embedded images decode successfully and have nonzero dimensions.
 - If source photos were downloaded, compare embedded bytes or hashes to the verified source bytes.
 - Use browser automation to test desktop and mobile layouts.
@@ -184,6 +188,12 @@ After editing, run the narrowest executable checks available.
 - Check that listing titles match restaurant names.
 - Flag unverified hours, seasonal roads, reservations, and prices.
 - Do not claim validation passed unless the command or browser check actually completed.
+
+### 📝 Markdown
+
+- Use raw HTML anchors with `target="_blank" rel="noopener noreferrer"` for clickable links that must open in a new tab or window.
+- Do not rely on standard Markdown link syntax for new-window behavior because it has no portable target attribute.
+- Confirm every local `href` resolves relative to the Markdown file containing it.
 
 ## 📦 Output Conventions
 

@@ -15,12 +15,12 @@ flowchart LR
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | 🗓️ Interactive day-by-day itinerary with logistics, lodging, activities, routes, restaurant cards, embedded photos, and image lightboxes. |
-| `dolomites_road_trip_categorized.kml` | 🗺️ Google Earth/My Maps placemarks grouped by day, with category icons, muted colors, descriptions, and Google Maps links. |
-| `Dolomite Packing List.html` | 🎒 Trip-specific family packing list. |
-| `Italy Emergency_Guide.html` | 🆘 Emergency contacts and travel-safety reference. |
-| `embed_restaurant_images.ps1` | 📸 Rebuilds the itinerary's embedded restaurant thumbnails from verified Google listing photo URLs. |
-| `../SKILLS.md` | 🧰 Instructions for using the reusable Copilot travel-itinerary skill. |
+| <a href="index.html" target="_blank" rel="noopener noreferrer">`index.html`</a> | 🗓️ Interactive day-by-day itinerary with logistics, lodging, activities, routes, restaurant cards, embedded photos, and image lightboxes. |
+| <a href="dolomites_road_trip_categorized.kml" target="_blank" rel="noopener noreferrer">`dolomites_road_trip_categorized.kml`</a> | 🗺️ Google Earth/My Maps placemarks grouped by day, with category icons, muted colors, descriptions, and Google Maps links. |
+| <a href="Dolomite%20Packing%20List.html" target="_blank" rel="noopener noreferrer">`Dolomite Packing List.html`</a> | 🎒 Trip-specific family packing list. |
+| <a href="Italy%20Emergency_Guide.html" target="_blank" rel="noopener noreferrer">`Italy Emergency_Guide.html`</a> | 🆘 Emergency contacts and travel-safety reference. |
+| <a href="embed_restaurant_images.ps1" target="_blank" rel="noopener noreferrer">`embed_restaurant_images.ps1`</a> | 📸 Rebuilds the itinerary's embedded restaurant thumbnails from verified Google listing photo URLs. |
+| <a href="../SKILLS.md" target="_blank" rel="noopener noreferrer">`../SKILLS.md`</a> | 🧰 Instructions for using the reusable Copilot travel-itinerary skill. |
 
 > 📝 Additional HTML, KML, and KMZ files in this folder are drafts or reference inputs. The files above are the maintained deliverables.
 
@@ -40,7 +40,9 @@ flowchart LR
 
 The HTML files are self-contained and can be opened directly in a browser; no server or build step is required. 👍
 
-Import `dolomites_road_trip_categorized.kml` into Google My Maps or Google Earth to view the categorized trip map.
+Import <a href="dolomites_road_trip_categorized.kml" target="_blank" rel="noopener noreferrer">`dolomites_road_trip_categorized.kml`</a> into Google My Maps or Google Earth to view the categorized trip map.
+
+> 🔗 Documentation and itinerary links open in a new tab or window and use `noopener noreferrer` for isolation.
 
 ## 📸 Refresh Restaurant Photos
 
@@ -59,4 +61,4 @@ Opening hours, seasonal lifts, mountain roads, toll systems, parking rules, pric
 
 ## ♻️ Reuse
 
-The workspace skill is stored at `../.github/skills/travel-itinerary-builder/SKILL.md`. See `../SKILLS.md` for examples and setup guidance. 🚀
+The workspace skill is stored at <a href="../.github/skills/travel-itinerary-builder/SKILL.md" target="_blank" rel="noopener noreferrer">`../.github/skills/travel-itinerary-builder/SKILL.md`</a>. See <a href="../SKILLS.md" target="_blank" rel="noopener noreferrer">`../SKILLS.md`</a> for examples and setup guidance. 🚀

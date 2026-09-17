@@ -33,7 +33,7 @@ For example, an October 2026 Dolomites trip uses `202610_Dolomites/`. If a trip 
 4. Confirm the proposed `YYYYMM_Destination/` folder name.
 5. Review assumptions and verify time-sensitive travel details before departure.
 
-See [SKILLS.md](SKILLS.md) for invocation examples and complete usage instructions.
+See <a href="SKILLS.md" target="_blank" rel="noopener noreferrer">SKILLS.md</a> for invocation examples and complete usage instructions.
 
 ## 📦 Recommended Trip Contents
 
@@ -69,12 +69,13 @@ Prefer official sources for opening hours, seasonal closures, road restrictions,
 
 ### 3. 🧱 Build
 
-Create readable, responsive travel documents with direct map links and clear daily logistics. Keep offline assets embedded only when offline access is required; otherwise favor maintainable external resources.
+Create readable, responsive travel documents with direct map links and clear daily logistics. Every link must open in a new tab or window and include `rel="noopener noreferrer"`. Keep offline assets embedded only when offline access is required; otherwise favor maintainable external resources.
 
 ### 4. 🧪 Validate
 
 - Confirm dates, route direction, lodging sequence, and reservation times.
 - Test itinerary links, navigation, images, keyboard controls, and mobile layouts.
+- Confirm every HTML anchor has `target="_blank"` and a `rel` containing both `noopener` and `noreferrer`.
 - Parse KML as XML and verify coordinates, styles, names, and map links.
 - Flag unverified prices, schedules, seasonal roads, and operating hours.
 - Keep each trip's `README.md` current with its maintained files and commands.
@@ -83,8 +84,8 @@ Create readable, responsive travel documents with direct map links and clear dai
 
 | Resource | Purpose |
 | --- | --- |
-| [SKILLS.md](SKILLS.md) | Usage guide and examples for the itinerary builder. |
-| [.github/skills/travel-itinerary-builder/SKILL.md](.github/skills/travel-itinerary-builder/SKILL.md) | Reusable Copilot workflow that creates and updates trip packages. |
+| <a href="SKILLS.md" target="_blank" rel="noopener noreferrer">SKILLS.md</a> | Usage guide and examples for the itinerary builder. |
+| <a href=".github/skills/travel-itinerary-builder/SKILL.md" target="_blank" rel="noopener noreferrer">Travel itinerary skill</a> | Reusable Copilot workflow that creates and updates trip packages. |
 
 ## ⚠️ Travel Safety
 
