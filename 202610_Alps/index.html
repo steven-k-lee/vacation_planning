@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#173f35">
+    <title>Girls Alpine Trip | Wiesbaden Loop</title>
+    <style>
+        :root {
+            --ink: #18221f;
+            --muted: #61706b;
+            --forest: #173f35;
+            --forest-light: #286252;
+            --snow: #f4f7f4;
+            --paper: #fffefd;
+            --line: #d8e0dc;
+            --gold: #d39a35;
+            --amber-bg: #fff4d9;
+            --amber-ink: #684b12;
+            --blue-bg: #e7f2f5;
+            --blue-ink: #194b58;
+            --shadow: 0 12px 34px rgba(19, 48, 40, 0.11);
+        }
+
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            margin: 0;
+            background:
+                linear-gradient(rgba(23, 63, 53, 0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(23, 63, 53, 0.035) 1px, transparent 1px),
+                var(--snow);
+            background-size: 32px 32px;
+            color: var(--ink);
+            font-family: Georgia, "Times New Roman", serif;
+            line-height: 1.55;
+        }
+
+        button, a { font: inherit; }
+        a { color: var(--forest-light); text-underline-offset: 3px; }
+        a:hover { color: var(--forest); }
+
+        .hero {
+            min-height: 430px;
+            display: flex;
+            align-items: flex-end;
+            position: relative;
+            overflow: hidden;
+            color: white;
+            background:
+                linear-gradient(180deg, rgba(5, 20, 17, 0.08) 15%, rgba(5, 20, 17, 0.82) 100%),
+                url("https://images.unsplash.com/photo-1527668752968-14dc70a27c95?auto=format&fit=crop&w=1800&q=85") center 48% / cover;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: auto 0 0;
+            height: 5px;
+            background: linear-gradient(90deg, #cf3f36 0 33.333%, #fff 33.333% 66.666%, #29704f 66.666%);
+        }
+
+        .hero-inner {
+            width: min(1120px, calc(100% - 40px));
+            margin: 0 auto;
+            padding: 72px 0 48px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .eyebrow {
+            margin: 0 0 10px;
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            max-width: 760px;
+            margin: 0;
+            font-size: clamp(2.6rem, 7vw, 5.6rem);
+            font-weight: 500;
+            line-height: 0.96;
+            text-wrap: balance;
+        }
+
+        .hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px 24px;
+            margin: 24px 0 0;
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .shell { width: min(1120px, calc(100% - 40px)); margin: 0 auto; }
+
+        .day-nav {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            margin: 28px 0;
+            overflow: hidden;
+            border: 1px solid var(--line);
+            border-radius: 6px;
+            background: var(--line);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 10px;
+            z-index: 10;
+        }
+
+        .day-nav button {
+            min-height: 58px;
+            border: 0;
+            background: var(--paper);
+            color: var(--forest);
+            cursor: pointer;
+            font-family: "Trebuchet MS", sans-serif;
+            font-weight: 700;
+        }
+
+        .day-nav button:hover, .day-nav button:focus-visible { background: #e6eee9; }
+
+        .trip-strip {
+            display: grid;
+            grid-template-columns: 1.2fr 1fr 1fr 1fr;
+            border-top: 1px solid var(--line);
+            border-bottom: 1px solid var(--line);
+            margin-bottom: 54px;
+        }
+
+        .trip-stat { padding: 18px 20px; border-right: 1px solid var(--line); }
+        .trip-stat:first-child { padding-left: 0; }
+        .trip-stat:last-child { border-right: 0; }
+        .trip-stat span {
+            display: block;
+            color: var(--muted);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .trip-stat strong { display: block; margin-top: 3px; font-size: 1.04rem; }
+
+        .packing-wrap { margin: -26px 0 54px; }
+        .packing-toggle {
+            display: flex;
+            width: 100%;
+            min-height: 50px;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            border: 1px solid var(--forest);
+            border-radius: 5px;
+            background: var(--forest);
+            color: white;
+            cursor: pointer;
+            font-family: "Trebuchet MS", sans-serif;
+            font-weight: 700;
+        }
+        .packing-toggle:hover { background: var(--forest-light); }
+        .packing-toggle-icon { font-size: 1.35rem; line-height: 1; transition: transform 180ms ease; }
+        .packing-toggle[aria-expanded="true"] .packing-toggle-icon { transform: rotate(45deg); }
+        .packing-panel { margin-top: 10px; padding: 24px; border: 1px solid var(--line); border-radius: 5px; background: var(--paper); box-shadow: var(--shadow); }
+        .packing-panel[hidden] { display: none; }
+        .packing-heading { margin: 0 0 5px; font-size: 1.65rem; }
+        .packing-intro { margin: 0 0 18px; color: var(--muted); }
+        .packing-progress { height: 6px; overflow: hidden; margin-bottom: 24px; border-radius: 3px; background: #e1e7e3; }
+        .packing-progress-bar { width: 0; height: 100%; background: var(--gold); transition: width 180ms ease; }
+        .packing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 26px 34px; }
+        .packing-group h3 { margin: 0 0 12px; padding-bottom: 7px; border-bottom: 1px solid var(--line); color: var(--forest); font-family: "Trebuchet MS", sans-serif; font-size: 0.82rem; text-transform: uppercase; }
+        .packing-item { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 12px; cursor: pointer; font-size: 0.9rem; }
+        .packing-item input { width: 18px; height: 18px; flex: 0 0 auto; margin: 2px 0 0; accent-color: var(--forest); }
+        .packing-item input:checked + span { color: var(--muted); text-decoration: line-through; }
+        .packing-item small { display: block; margin-top: 2px; color: var(--muted); font-size: 0.75rem; line-height: 1.35; text-decoration: none; }
+        .packing-actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 12px; }
+        .packing-count { color: var(--muted); font-family: "Trebuchet MS", sans-serif; font-size: 0.8rem; }
+        .packing-reset { min-height: 40px; padding: 8px 13px; border: 1px solid var(--line); border-radius: 5px; background: white; color: var(--forest); cursor: pointer; font-family: "Trebuchet MS", sans-serif; font-size: 0.8rem; font-weight: 700; }
+
+        .day {
+            display: grid;
+            grid-template-columns: minmax(210px, 0.7fr) minmax(0, 1.6fr);
+            gap: 52px;
+            padding: 0 0 64px;
+            scroll-margin-top: 90px;
+        }
+
+        .day + .day { padding-top: 58px; border-top: 1px solid var(--line); }
+        .day-kicker {
+            color: var(--gold);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.78rem;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+        .day h2 { margin: 8px 0 14px; font-size: clamp(1.8rem, 4vw, 2.6rem); line-height: 1.08; }
+        .day-route { margin: 0 0 22px; color: var(--muted); }
+
+        .route-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            min-height: 44px;
+            padding: 10px 15px;
+            border-radius: 5px;
+            background: var(--forest);
+            color: white;
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none;
+        }
+        .route-button:hover { background: var(--forest-light); color: white; }
+
+        .route-button svg { width: 18px; height: 18px; flex: 0 0 auto; }
+
+        .callout {
+            margin-top: 22px;
+            padding: 14px 16px;
+            border-left: 3px solid var(--gold);
+            background: var(--amber-bg);
+            color: var(--amber-ink);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.83rem;
+        }
+
+        .activity-photos {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 7px;
+            margin-top: 18px;
+        }
+
+        .activity-thumb {
+            position: relative;
+            aspect-ratio: 4 / 3;
+            min-width: 0;
+            overflow: hidden;
+            padding: 0;
+            border: 0;
+            border-radius: 5px;
+            background: #dce4df;
+            cursor: zoom-in;
+        }
+
+        .activity-thumb img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 180ms ease;
+        }
+
+        .activity-thumb:hover img { transform: scale(1.04); }
+        .activity-thumb:focus-visible { outline: 3px solid var(--gold); outline-offset: 3px; }
+        .activity-thumb span {
+            position: absolute;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            padding: 18px 6px 6px;
+            background: linear-gradient(transparent, rgba(8, 25, 21, 0.88));
+            color: white;
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.68rem;
+            font-weight: 700;
+            line-height: 1.15;
+            text-align: left;
+        }
+
+        .timeline { position: relative; }
+        .event {
+            display: grid;
+            grid-template-columns: 142px minmax(0, 1fr);
+            gap: 22px;
+            position: relative;
+            padding: 0 0 29px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .event:hover { background: rgba(23, 63, 53, 0.045); }
+        .event:focus-visible { outline: 2px solid var(--forest-light); outline-offset: 5px; }
+
+        .event:last-child { padding-bottom: 0; }
+        .event::before {
+            content: "";
+            position: absolute;
+            top: 10px;
+            bottom: -10px;
+            left: 151px;
+            width: 1px;
+            background: var(--line);
+        }
+        .event:last-child::before { display: none; }
+        .event::after {
+            content: "";
+            position: absolute;
+            top: 7px;
+            left: 147px;
+            width: 9px;
+            height: 9px;
+            border: 2px solid var(--paper);
+            border-radius: 50%;
+            background: var(--gold);
+            box-shadow: 0 0 0 1px var(--gold);
+        }
+
+        .time {
+            color: var(--forest);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-align: right;
+        }
+        .event-copy { padding-left: 13px; }
+        .event h3 { margin: 0 0 5px; font-size: 1.05rem; }
+        .event h3::after { content: "  ↗"; color: var(--forest-light); font-family: "Trebuchet MS", sans-serif; }
+        .event p { margin: 0; color: #43504c; }
+
+        .meal {
+            margin-top: 10px;
+            padding: 11px 13px;
+            border: 1px solid #c9dce1;
+            border-radius: 5px;
+            background: var(--blue-bg);
+            color: var(--blue-ink);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.84rem;
+        }
+
+        .restaurant-toggle { grid-column: 1 / -1; margin-top: 28px; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; background: var(--paper); }
+        .restaurant-toggle summary { display: flex; align-items: center; gap: 9px; min-height: 50px; padding: 12px 16px; background: #e9efeb; color: var(--forest); cursor: pointer; font-family: "Trebuchet MS", sans-serif; font-weight: 700; list-style: none; }
+        .restaurant-toggle summary::-webkit-details-marker { display: none; }
+        .restaurant-toggle summary::before { content: "+"; font-size: 1.2rem; line-height: 1; transition: transform 180ms ease; }
+        .restaurant-toggle details[open] summary::before { transform: rotate(45deg); }
+        .restaurant-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; padding: 12px; }
+        .res-card { display: grid; grid-template-columns: 78px minmax(0, 1fr); min-width: 0; overflow: hidden; border: 1px solid var(--line); border-radius: 5px; background: white; cursor: pointer; }
+        .res-card:hover, .res-card:focus-visible { border-color: var(--forest-light); outline: none; background: #f7faf8; }
+        .res-thumb { width: 78px; min-height: 112px; border: 0; border-right: 1px solid var(--line); background-color: #dce4df; background-position: center; background-size: cover; cursor: zoom-in; }
+        .res-thumb:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+        .res-info { min-width: 0; padding: 10px; }
+        .res-name { display: block; overflow: hidden; color: var(--forest); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+        .res-meta { margin: 4px 0; color: var(--muted); font-family: "Trebuchet MS", sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .res-hours { margin-bottom: 4px; color: var(--amber-ink); font-family: "Trebuchet MS", sans-serif; font-size: 0.7rem; }
+        .res-desc { margin: 0; color: #43504c; font-size: 0.78rem; line-height: 1.35; }
+
+        .essentials {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 56px 0 72px;
+            border-top: 1px solid var(--line);
+        }
+
+        .essential-panel { padding: 26px; border: 1px solid var(--line); background: var(--paper); box-shadow: var(--shadow); }
+        .essential-panel:only-child { grid-column: 1 / -1; }
+        .essential-panel h2 { margin: 0 0 18px; font-size: 1.45rem; }
+        .essential-panel ul { margin: 0; padding-left: 19px; }
+        .essential-panel li { margin-bottom: 11px; }
+
+        footer {
+            padding: 24px 20px 38px;
+            color: var(--muted);
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 0.78rem;
+            text-align: center;
+        }
+
+        .mobile-dock { display: none; }
+
+        .lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 54px 20px 24px;
+            background: rgba(5, 17, 14, 0.94);
+        }
+
+        .lightbox.is-open { display: flex; }
+        .lightbox img {
+            max-width: min(1100px, 94vw);
+            max-height: 84vh;
+            border-radius: 5px;
+            object-fit: contain;
+            box-shadow: 0 18px 54px rgba(0, 0, 0, 0.45);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            width: 42px;
+            height: 42px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            border-radius: 50%;
+            background: rgba(0, 0, 0, 0.25);
+            color: white;
+            cursor: pointer;
+            font-family: "Trebuchet MS", sans-serif;
+            font-size: 1.45rem;
+        }
+
+        @media (max-width: 760px) {
+            body { padding-bottom: 76px; }
+            .hero { min-height: 245px; }
+            .hero-inner { padding: 54px 0 30px; }
+            .hero-inner, .shell { width: min(100% - 28px, 1120px); }
+            .day-nav { top: 6px; }
+            .day-nav button { padding: 8px 4px; font-size: 0.78rem; }
+            .trip-strip { grid-template-columns: 1fr 1fr; }
+            .trip-stat { border-bottom: 1px solid var(--line); }
+            .trip-stat:nth-child(2) { border-right: 0; }
+            .trip-stat:first-child { padding-left: 20px; }
+            .trip-stat:nth-child(n + 3) { border-bottom: 0; }
+            .packing-wrap { margin-top: -30px; }
+            .packing-panel { padding: 18px 15px; }
+            .packing-grid { grid-template-columns: 1fr; gap: 22px; }
+            .restaurant-list { grid-template-columns: 1fr; }
+            .res-thumb { min-height: 104px; }
+            .day { grid-template-columns: 1fr; gap: 34px; }
+            .event { display: block; padding: 0 0 30px 22px; }
+            .event::before { top: 28px; bottom: -8px; left: 5px; }
+            .event::after { top: 24px; left: 1px; }
+            .time { margin-bottom: 5px; text-align: left; }
+            .event-copy { padding-left: 0; }
+            .essentials { grid-template-columns: 1fr; }
+
+            .mobile-dock {
+                display: grid;
+                grid-template-columns: 52px minmax(0, 1fr) 52px;
+                gap: 8px;
+                position: fixed;
+                right: 10px;
+                bottom: max(10px, env(safe-area-inset-bottom));
+                left: 10px;
+                z-index: 30;
+                padding: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.16);
+                border-radius: 8px;
+                background: rgba(23, 63, 53, 0.96);
+                box-shadow: 0 12px 30px rgba(9, 31, 25, 0.35);
+                backdrop-filter: blur(12px);
+            }
+
+            .dock-button, .dock-route {
+                display: flex;
+                min-width: 0;
+                min-height: 48px;
+                align-items: center;
+                justify-content: center;
+                border: 0;
+                border-radius: 5px;
+                background: rgba(255, 255, 255, 0.1);
+                color: white;
+                cursor: pointer;
+                font-family: "Trebuchet MS", sans-serif;
+                font-weight: 700;
+            }
+
+            .dock-route {
+                gap: 8px;
+                background: white;
+                color: var(--forest);
+                text-decoration: none;
+            }
+
+            .dock-route:hover { color: var(--forest); background: #edf3ef; }
+            .dock-button:disabled { cursor: default; opacity: 0.35; }
+            .dock-button svg, .dock-route svg { width: 20px; height: 20px; }
+        }
+
+        @media (max-width: 430px) {
+            h1 { font-size: 2.55rem; }
+            .hero-meta { display: grid; gap: 5px; }
+            .time { font-size: 0.74rem; }
+        }
+
+        @media print {
+            body { background: white; }
+            .hero { min-height: 220px; print-color-adjust: exact; }
+            .day-nav { display: none; }
+            .day { break-inside: avoid; }
+            .route-button { border: 1px solid var(--forest); color: var(--forest); background: white; }
+            .essential-panel { box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-inner">
+            <p class="eyebrow">Three countries · Three days · One alpine loop</p>
+            <h1>Girls Alpine Trip</h1>
+            <div class="hero-meta">
+                <span>October 31 - November 2, 2026</span>
+                <span>Wiesbaden · Lauterbrunnen · Füssen · Wiesbaden</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="shell">
+        <nav class="day-nav" aria-label="Jump to a trip day">
+            <button type="button" data-day="day-1">Day 1 · Switzerland</button>
+            <button type="button" data-day="day-2">Day 2 · Bavaria</button>
+            <button type="button" data-day="day-3">Day 3 · Return</button>
+        </nav>
+
+        <section class="trip-strip" aria-label="Trip summary">
+            <div class="trip-stat"><span>Start / finish</span><strong>Wiesbaden</strong></div>
+            <div class="trip-stat"><span>Duration</span><strong>3 days</strong></div>
+            <div class="trip-stat"><span>Countries</span><strong>CH · AT · DE</strong></div>
+            <div class="trip-stat"><span>Transport</span><strong>Car + rail</strong></div>
+        </section>
+
+        <section class="packing-wrap" aria-labelledby="packingToggle">
+            <button class="packing-toggle" id="packingToggle" type="button" aria-expanded="false" aria-controls="packingPanel">
+                <span>Packing list · <span id="packingToggleCount">0 / 16 packed</span></span>
+                <span class="packing-toggle-icon" aria-hidden="true">+</span>
+            </button>
+            <div class="packing-panel" id="packingPanel" hidden>
+                <h2 class="packing-heading">Alpine packing checklist</h2>
+                <p class="packing-intro">For three days of early starts, exposed viewpoints, late-autumn weather, and long driving legs.</p>
+                <div class="packing-progress" role="progressbar" aria-label="Packing progress" aria-valuemin="0" aria-valuemax="16" aria-valuenow="0"><div class="packing-progress-bar"></div></div>
+                <div class="packing-grid">
+                    <div class="packing-group">
+                        <h3>Cold-weather clothing</h3>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="thermal"><span><strong>Thermal base layer</strong><small>Top and leggings for exposed mountain stops.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="mid-layer"><span><strong>Fleece or light puffer</strong><small>Warm insulation without taking much car space.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="shell"><span><strong>Windproof rain shell</strong><small>For rail platforms, cycling, and palace grounds.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="accessories"><span><strong>Beanie, gloves, and thick scarf</strong><small>Valley shade brings rapid temperature drops.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="shoes"><span><strong>Water-resistant walking shoes</strong><small>Choose reliable grip for damp paths and steps.</small></span></label>
+                    </div>
+                    <div class="packing-group">
+                        <h3>Activities &amp; daylight</h3>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="daypack"><span><strong>Small daypack and water bottle</strong><small>For rail trips, viewpoints, and palace visits.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="sun"><span><strong>Sunglasses and sunscreen</strong><small>Mountain glare remains strong in late autumn.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="bike"><span><strong>Cycling gloves and visible layers</strong><small>The Alpsee ride approaches sunset near 4:50 PM.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="status"><span><strong>Morning conditions check</strong><small>Check official road, bridge, lift, and trail status daily.</small></span></label>
+                    </div>
+                    <div class="packing-group">
+                        <h3>Driving &amp; documents</h3>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="identity"><span><strong>Passports or national IDs</strong><small>For the Switzerland and Austria crossings.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="car-docs"><span><strong>License, registration, and insurance</strong><small>Keep accepted documents accessible.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="tires"><span><strong>Alpine-symbol tires verified</strong><small>Winter or all-season tires are required in wintry conditions.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="vignettes"><span><strong>Swiss and Austrian vignette plan</strong><small>Keep digital receipts or purchase instructions offline.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="bookings"><span><strong>Hotels, castles, and E-bike confirmations</strong><small>Download every booking before departure.</small></span></label>
+                    </div>
+                    <div class="packing-group">
+                        <h3>Tech &amp; road comfort</h3>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="charging"><span><strong>Phone cables, car charger, and power bank</strong><small>Navigation and tickets will rely on charged phones.</small></span></label>
+                        <label class="packing-item"><input type="checkbox" data-pack-item="offline"><span><strong>Offline maps and downloaded tickets</strong><small>Mountain valleys can have weak cellular coverage.</small></span></label>
+                    </div>
+                </div>
+                <div class="packing-actions">
+                    <span class="packing-count" id="packingCount" aria-live="polite">0 of 16 items packed</span>
+                    <button class="packing-reset" id="packingReset" type="button">Reset checklist</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="day" id="day-1" data-trip-day>
+            <div class="day-intro">
+                <span class="day-kicker">Day 1 · Saturday, October 31</span>
+                <h2>Swiss High Alps &amp; Golden Hour</h2>
+                <p class="day-route">Wiesbaden → Lauterbrunnen → Wengen → Kleine Scheidegg → Interlaken → Lauterbrunnen</p>
+                <a class="route-button" href="https://www.google.com/maps/dir/Wiesbaden/Hotel+Oberland,+Lauterbrunnen,+Switzerland/Interlaken+Ost/Restaurant+Sch%C3%BCtzen,+Lauterbrunnen,+Switzerland/" target="_blank" rel="noopener noreferrer">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/><path d="M4 12h11"/><circle cx="19" cy="12" r="2"/></svg>
+                    Open master route
+                </a>
+                <div class="callout"><strong>Confirm before departure:</strong> Rail and funicular timetables, Harder Kulm's final descent, and late-October mountain conditions. Prices below are estimates from the source itinerary.</div>
+                <div class="activity-photos" aria-label="Day 1 activity photos">
+                    <button class="activity-thumb" type="button" data-full="assets/wengen.jpg" data-alt="Lauterbrunnen valley viewed from Wengen" data-source="https://www.travelandleisure.com/thmb/2_MAUJuTkM9uSyyM_EJI4CJeGDo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/TAL-lead-image-WENGENSW0825-20aa26348297433eaae0ad2ea477c50f.jpg" aria-label="Enlarge view from Wengen"><img src="assets/wengen.jpg" alt="Lauterbrunnen valley viewed from Wengen" width="1200" height="800" loading="lazy"><span>Wengen</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/kleine-scheidegg.jpg" data-alt="Kleine Scheidegg railway station in the Alps" data-source="https://www.interlaken.swiss/fileadmin/_processed_/a/7/csm_kleine-scheidegg-bahnhof-winter-skiregion_c2fa21f0a8.jpg" aria-label="Enlarge photo of Kleine Scheidegg"><img src="assets/kleine-scheidegg.jpg" alt="Kleine Scheidegg railway station in the Alps" width="900" height="601" loading="lazy"><span>Kleine Scheidegg</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/harder-kulm.jpg" data-alt="Two Lakes Bridge viewpoint at Harder Kulm" data-source="https://www.myswissalps.com/wp-content/uploads/harder-kulm-two-lakes-bridge-gate.jpg" aria-label="Enlarge photo of Harder Kulm"><img src="assets/harder-kulm.jpg" alt="Two Lakes Bridge viewpoint at Harder Kulm" width="1600" height="1067" loading="lazy"><span>Harder Kulm</span></button>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <article class="event" data-map="https://maps.google.com/?q=Lauterbrunnen+Train+Station"><div class="time">4:00 - 9:00</div><div class="event-copy"><h3>The early departure</h3><p>Leave Wiesbaden via the A5. Purchase the Swiss motorway vignette at the Basel border.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Hotel+Oberland+Lauterbrunnen"><div class="time">9:00 - 9:30</div><div class="event-copy"><h3>Arrival &amp; bag drop</h3><p>Park at <a href="https://maps.google.com/?q=Lauterbrunnen+Train+Station" target="_blank" rel="noopener noreferrer">Lauterbrunnen Station Garage</a> and leave bags at <a href="https://maps.google.com/?q=Hotel+Oberland+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Hotel Oberland</a>.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Reformierte+Kirche+Wengen"><div class="time">9:30 - 10:20</div><div class="event-copy"><h3>Wengen postcard stop</h3><p>Take the cogwheel train to Wengen, then walk five minutes to the <a href="https://maps.google.com/?q=Reformierte+Kirche+Wengen" target="_blank" rel="noopener noreferrer">Wengen Swiss Reformed Church</a> for the valley view.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Kleine+Scheidegg"><div class="time">10:24 - 12:30</div><div class="event-copy"><h3>High Alps stroll &amp; lunch</h3><p>Ride to <a href="https://maps.google.com/?q=Kleine+Scheidegg" target="_blank" rel="noopener noreferrer">Kleine Scheidegg</a> at 2,061 m and stroll toward Fallbodensee beneath the Eiger.</p><div class="meal"><strong>Lunch:</strong> <a href="https://maps.google.com/?q=Chaletbar+Kleine+Scheidegg" target="_blank" rel="noopener noreferrer">Chaletbar Kleine Scheidegg</a>. Hours and seasonal operation unverified.</div></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Staubbach+Falls+Lauterbrunnen"><div class="time">12:30 - 2:30</div><div class="event-copy"><h3>Waterfall walk</h3><p>Return by train to the valley and take the flat walk to the misty base of <a href="https://maps.google.com/?q=Staubbach+Falls+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Staubbach Falls</a>.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Harder+Kulm"><div class="time">2:30 - 5:30</div><div class="event-copy"><h3>Sunset over the lakes</h3><p>Drive about 20 minutes to <a href="https://maps.google.com/?q=Interlaken+Ost+Train+Station" target="_blank" rel="noopener noreferrer">Interlaken Ost Garage</a>. Take the funicular to <a href="https://maps.google.com/?q=Harder+Kulm" target="_blank" rel="noopener noreferrer">Harder Kulm</a> and walk the Two Lakes Bridge. The source plan targets the 5:00 PM descent.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Restaurant+Schuetzen+Lauterbrunnen"><div class="time">6:30 onward</div><div class="event-copy"><h3>The fondue feast</h3><p>Return to Lauterbrunnen for Swiss cheese fondue near the hotel.</p><div class="meal"><strong>Dinner:</strong> <a href="https://maps.google.com/?q=Restaurant+Schuetzen+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Restaurant Schützen Lauterbrunnen</a>. Reservations and hours unverified.</div></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Hotel+Oberland+Lauterbrunnen"><div class="time">After dinner</div><div class="event-copy"><h3>Lodging at Hotel Oberland</h3><p>Walk back to <a href="https://maps.google.com/?q=Hotel+Oberland+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Hotel Oberland</a> for the night.</p></div></article>
+            </div>
+
+            <div class="restaurant-toggle">
+                <details>
+                    <summary>Restaurant recommendations · Lauterbrunnen &amp; Kleine Scheidegg</summary>
+                    <div class="restaurant-list">
+                        <article class="res-card">
+                            <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSSFuUMjMWgTCStSxC-feEx8fbEvh-aaq5zBC2VrtzRw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSSFuUMjMWgTCStSxC-feEx8fbEvh-aaq5zBC2VrtzRw&amp;s=10" data-alt="Chalet Bar at Kleine Scheidegg" aria-label="Enlarge photo of Chalet Bar"></button>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Chalet+Bar+Kleine+Scheidegg" target="_blank" rel="noopener noreferrer">Chalet Bar</a><div class="res-meta">Swiss · Lunch</div><div class="res-hours">Hours may change</div><p class="res-desc">Convenient mountain lunch stop already built into the Kleine Scheidegg visit.</p></div>
+                        </article>
+                        <article class="res-card">
+                            <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk6eBVoFlPQ348KiI1SAx9edbwYXuboRKv4MvTDq_-Gg&amp;s')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk6eBVoFlPQ348KiI1SAx9edbwYXuboRKv4MvTDq_-Gg&amp;s" data-alt="Restaurant Schützen in Lauterbrunnen" aria-label="Enlarge photo of Restaurant Schützen"></button>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Restaurant+Sch%C3%BCtzen+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Restaurant Schützen</a><div class="res-meta">Swiss · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned fondue dinner near Hotel Oberland after returning from Interlaken.</p></div>
+                        </article>
+                        <article class="res-card">
+                            <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VVHJQYevUXzBb5Il3TMitNnUgExIVlD_pvQ7WunChw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VVHJQYevUXzBb5Il3TMitNnUgExIVlD_pvQ7WunChw&amp;s=10" data-alt="Hotel Oberland restaurant in Lauterbrunnen" aria-label="Enlarge photo of Hotel Oberland restaurant"></button>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Hotel+Oberland+Restaurant+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Hotel Oberland Restaurant</a><div class="res-meta">Swiss · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A practical alternative at the lodging, useful if the evening schedule runs late.</p></div>
+                        </article>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section class="day" id="day-2" data-trip-day>
+            <div class="day-intro">
+                <span class="day-kicker">Day 2 · Sunday, November 1</span>
+                <h2>Bavarian Drives, Castle Views &amp; Twilight Cycling</h2>
+                <p class="day-route">Lauterbrunnen → Bregenz corridor → Hohenschwangau → Füssen</p>
+                <a class="route-button" href="https://www.google.com/maps/dir/Hotel+Oberland,+Lauterbrunnen,+Switzerland/Hohenschwangau+Parking+P1,+Schwangau/BIKE+F%C3%9CSSEN+GmbH,+Feldweg,+Schwangau/Gasthof+Krone,+Schrannenplatz,+F%C3%BCssen/" target="_blank" rel="noopener noreferrer">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/><path d="M4 12h11"/><circle cx="19" cy="12" r="2"/></svg>
+                    Open master route
+                </a>
+                <div class="callout"><strong>Timing risk:</strong> Castle access, Marienbrücke, carriage service, and E-bike availability are weather-dependent. Sunset is around 4:50 PM; confirm the rental return time and bring lights.</div>
+                <div class="activity-photos" aria-label="Day 2 activity photos">
+                    <button class="activity-thumb" type="button" data-full="assets/neuschwanstein.jpg" data-alt="Neuschwanstein Castle viewed from the east" data-source="https://www.neuschwanstein.de/bilder/schloss/neuschwanstein_ostansicht_www.kreativ-instinkt.de_DI016842-790.jpg" aria-label="Enlarge photo of Neuschwanstein Castle"><img src="assets/neuschwanstein.jpg" alt="Neuschwanstein Castle viewed from the east" width="790" height="450" loading="lazy"><span>Neuschwanstein</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/alpsee.jpg" data-alt="Alpsee lake near Hohenschwangau" data-source="https://www.hohenschwangau.de/fileadmin/user_upload/DSC01338.JPG" aria-label="Enlarge photo of Alpsee"><img src="assets/alpsee.jpg" alt="Alpsee lake near Hohenschwangau" width="1600" height="1067" loading="lazy"><span>Alpsee</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/fuessen.jpg" data-alt="Historic old town of Füssen viewed from above" data-source="https://www.fuessen.de/fileadmin/_processed_/9/c/csm_F%C3%BCssen_Altstadt_von_oben_75_1__F%C3%BCssen_Tourismus_und_Marketing_Struck_Mathias_bd468c1e0e.jpg" aria-label="Enlarge photo of Füssen old town"><img src="assets/fuessen.jpg" alt="Historic old town of Füssen viewed from above" width="1600" height="583" loading="lazy"><span>Füssen Altstadt</span></button>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <article class="event" data-map="https://maps.google.com/?q=Hohenschwangau+Parking+P1-P4"><div class="time">8:30 - 1:00</div><div class="event-copy"><h3>Cross-country alpine drive</h3><p>Check out of Hotel Oberland. Drive past Lake Lucerne, cross Austria through the Bregenz corridor, and continue into Bavaria.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Hohenschwangau+Parking+P1-P4"><div class="time">1:00 - 1:45</div><div class="event-copy"><h3>Arrival &amp; quick snack</h3><p>Park in the <a href="https://maps.google.com/?q=Hohenschwangau+Parking+P1-P4" target="_blank" rel="noopener noreferrer">Hohenschwangau lots</a> and pick up a quick pretzel or bratwurst.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Hotel+Mueller+Schwangau"><div class="time">1:45 - 2:30</div><div class="event-copy"><h3>Horse-carriage ascent</h3><p>Board the traditional carriage opposite <a href="https://maps.google.com/?q=Hotel+Mueller+Schwangau" target="_blank" rel="noopener noreferrer">Hotel Müller</a> for the forest climb.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Neuschwanstein+Castle"><div class="time">2:30 - 3:30</div><div class="event-copy"><h3>Fairytale castle tour</h3><p>Take the pre-booked indoor tour of <a href="https://maps.google.com/?q=Neuschwanstein+Castle" target="_blank" rel="noopener noreferrer">Neuschwanstein Castle</a>, then visit <a href="https://maps.google.com/?q=Marienbruecke+Schwangau" target="_blank" rel="noopener noreferrer">Marienbrücke</a> if open.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=BIKE+FUESSEN+Schwangau"><div class="time">3:45 - 5:00</div><div class="event-copy"><h3>Golden-hour bike loop</h3><p>Descend by carriage or on foot, collect E-bikes from <a href="https://maps.google.com/?q=BIKE+FUESSEN+Schwangau" target="_blank" rel="noopener noreferrer">BIKE FÜSSEN Schwangau</a>, and ride a one-hour loop through the meadows and along Lake Alpsee.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Gasthof+Krone+Fuessen"><div class="time">5:15 onward</div><div class="event-copy"><h3>Cozy tavern dinner</h3><p>Continue into <a href="https://maps.google.com/?q=Fuessen+Altstadt" target="_blank" rel="noopener noreferrer">Füssen Altstadt</a> for dinner.</p><div class="meal"><strong>Dinner:</strong> <a href="https://maps.google.com/?q=Gasthof+Krone+Fuessen" target="_blank" rel="noopener noreferrer">Gasthof Krone Füssen</a>. Reservations and hours are still to be confirmed.</div></div></article>
+                <article class="event" data-map="https://www.google.com/maps/search/?api=1&amp;query=Hotel+near+F%C3%BCssen+Altstadt"><div class="time">After dinner</div><div class="event-copy"><h3>Go to Füssen lodging</h3><p>Travel to the overnight lodging near Füssen Altstadt. The hotel name and address are still unconfirmed; update this Maps destination when booked.</p></div></article>
+            </div>
+
+            <div class="restaurant-toggle">
+                <details>
+                    <summary>Restaurant recommendations · Füssen</summary>
+                    <div class="restaurant-list">
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10" data-alt="Gasthof Krone restaurant in Füssen" aria-label="Enlarge photo of Gasthof Krone"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Gasthof+Krone+F%C3%BCssen" target="_blank" rel="noopener noreferrer">Gasthof Krone</a><div class="res-meta">Bavarian · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned old-town tavern dinner after the Alpsee ride.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10" data-alt="Madame Plüsch restaurant in Füssen" aria-label="Enlarge photo of Madame Plüsch"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=7040114834011529630" target="_blank" rel="noopener noreferrer">Madame Plüsch</a><div class="res-meta">Bavarian · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">Historic, atmospheric alternative for regional dishes in central Füssen.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10" data-alt="Gasthaus zum Schwanen in Füssen" aria-label="Enlarge photo of Gasthaus zum Schwanen"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=5407654798807726445" target="_blank" rel="noopener noreferrer">Gasthaus zum Schwanen</a><div class="res-meta">Traditional · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A cozy old-town choice when traditional German comfort food is the priority.</p></div></article>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section class="day" id="day-3" data-trip-day>
+            <div class="day-intro">
+                <span class="day-kicker">Day 3 · Monday, November 2</span>
+                <h2>Royal Palaces, Gelato Dash &amp; Return</h2>
+                <p class="day-route">Füssen → Linderhof → Oberammergau → Wiesbaden</p>
+                <a class="route-button" href="https://www.google.com/maps/dir/F%C3%BCssen/Linderhof+Palace,+Ettal/Eis+Paradiso,+Dorfstra%C3%9Fe,+Oberammergau/Wiesbaden/" target="_blank" rel="noopener noreferrer">
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/><path d="M4 12h11"/><circle cx="19" cy="12" r="2"/></svg>
+                    Open master route
+                </a>
+                <div class="callout"><strong>Tight turnaround:</strong> The source allows 40 minutes for a 10:00 AM palace tour and assumes the café opens at 10:40 AM. Confirm both official schedules before relying on the 11:00 AM departure.</div>
+                <div class="activity-photos" aria-label="Day 3 activity photos">
+                    <button class="activity-thumb" type="button" data-full="assets/linderhof.jpg" data-alt="Linderhof Palace and formal gardens" data-source="https://www.schlosslinderhof.de/bilder/schloss/linderhof575b.jpg" aria-label="Enlarge photo of Linderhof Palace"><img src="assets/linderhof.jpg" alt="Linderhof Palace and formal gardens" width="575" height="385" loading="lazy"><span>Linderhof</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/oberammergau.jpg" data-alt="Traditional painted house in Oberammergau" data-source="https://www.ammergauer-alpen.de/en/fileadmin/_processed_/4/e/csm_Ludwig_Thoma-Haus-Stephan_de_Paly_0f30c332c2.jpg" aria-label="Enlarge photo of Oberammergau painted houses"><img src="assets/oberammergau.jpg" alt="Traditional painted house in Oberammergau" width="1600" height="1067" loading="lazy"><span>Oberammergau</span></button>
+                    <button class="activity-thumb" type="button" data-full="assets/wiesbaden.jpg" data-alt="Kurhaus Wiesbaden and its green lawn" data-source="https://tourismus.wiesbaden.de/entdecken/sehenswertes/kurhaus.php.media/144611/5436_Martin_Kunz.jpg.scaled/4fd6ba9a4e701dde18394d55f6ea650f.jpg" aria-label="Enlarge photo of Wiesbaden Kurhaus"><img src="assets/wiesbaden.jpg" alt="Kurhaus Wiesbaden and its green lawn" width="945" height="630" loading="lazy"><span>Wiesbaden</span></button>
+                </div>
+            </div>
+
+            <div class="timeline">
+                <article class="event" data-map="https://maps.google.com/?q=Linderhof+Palace"><div class="time">9:00 - 9:45</div><div class="event-copy"><h3>Ammergau Alps drive</h3><p>Check out and drive through the mountain valley toward Linderhof.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Linderhof+Palace"><div class="time">9:45 - 10:25</div><div class="event-copy"><h3>Linderhof Palace tour</h3><p>Park at <a href="https://maps.google.com/?q=Linderhof+Palace" target="_blank" rel="noopener noreferrer">Linderhof Palace</a> for the source itinerary's 10:00 AM indoor tour.</p></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Eis+Paradiso+Oberammergau"><div class="time">10:25 - 11:00</div><div class="event-copy"><h3>The gelato dash</h3><p>Drive about 15 minutes to Oberammergau, photograph the <em>Lüftlmalerei</em> frescoes, and stop for gelato.</p><div class="meal"><strong>Stop:</strong> <a href="https://maps.google.com/?q=Eis+Paradiso+Oberammergau" target="_blank" rel="noopener noreferrer">Eiscafé Paradiso</a>. The stated 10:40 AM opening is unverified.</div></div></article>
+                <article class="event" data-map="https://maps.google.com/?q=Wiesbaden"><div class="time">11:00 - 3:30</div><div class="event-copy"><h3>The homeward stretch</h3><p>Take the A7 north toward <a href="https://maps.google.com/?q=Wiesbaden" target="_blank" rel="noopener noreferrer">Wiesbaden</a>, targeting a 3:30 PM arrival. Allow contingency time for traffic and breaks.</p></div></article>
+            </div>
+
+            <div class="restaurant-toggle">
+                <details>
+                    <summary>Restaurant recommendations · Oberammergau</summary>
+                    <div class="restaurant-list">
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10" data-alt="Eiscafé Paradiso in Oberammergau" aria-label="Enlarge photo of Eiscafé Paradiso"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Eiscaf%C3%A9+Paradiso+Oberammergau" target="_blank" rel="noopener noreferrer">Eiscafé Paradiso</a><div class="res-meta">Café · Quick stop</div><div class="res-hours">Stated 10:40 opening unverified</div><p class="res-desc">The itinerary's quick gelato stop before the return drive.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10" data-alt="Ammergauer Maxbräu in Oberammergau" aria-label="Enlarge photo of Ammergauer Maxbräu"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Ammergauer+Maxbr%C3%A4u+Oberammergau" target="_blank" rel="noopener noreferrer">Ammergauer Maxbräu</a><div class="res-meta">Bavarian · Meal</div><div class="res-hours">Hours may change</div><p class="res-desc">A fuller Bavarian meal option if the tightly scheduled return can be relaxed.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10" data-alt="Mundart restaurant in Oberammergau" aria-label="Enlarge photo of Mundart"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Mundart+Restaurant+Oberammergau" target="_blank" rel="noopener noreferrer">Mundart</a><div class="res-meta">Regional · Meal</div><div class="res-hours">Hours may change</div><p class="res-desc">A contemporary regional alternative near the center of Oberammergau.</p></div></article>
+                    </div>
+                </details>
+            </div>
+        </section>
+
+        <section class="essentials" aria-label="Trip essentials">
+            <article class="essential-panel">
+                <h2>Tickets &amp; road costs</h2>
+                <ul>
+                    <li><strong>Swiss rail and lifts:</strong> source estimates CHF 64 return to Kleine Scheidegg and CHF 44 for Harder Kulm.</li>
+                    <li><strong>Neuschwanstein:</strong> pre-book timed entry weeks ahead through the official portal.</li>
+                    <li><strong>Carriages:</strong> source estimates €8 uphill and €4 downhill, cash only.</li>
+                    <li><strong>Linderhof:</strong> source estimate is €10 at the property ticket booth.</li>
+                    <li><strong>Road vignettes:</strong> source estimates CHF 40 for Switzerland and €3.40 for a one-day Austrian vignette.</li>
+                </ul>
+            </article>
+        </section>
+    </main>
+
+    <footer>Built from the source itinerary. Operating hours, prices, reservations, lodging in Füssen, and weather-sensitive access remain unverified as of September 19, 2026.</footer>
+
+    <nav class="mobile-dock" aria-label="Current day driving controls">
+        <button class="dock-button" id="previousDay" type="button" aria-label="Previous day">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+        </button>
+        <a class="dock-route" id="currentRoute" href="https://www.google.com/maps/dir/Wiesbaden/Hotel+Oberland,+Lauterbrunnen,+Switzerland/Interlaken+Ost/Restaurant+Sch%C3%BCtzen,+Lauterbrunnen,+Switzerland/" target="_blank" rel="noopener noreferrer">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/><path d="M4 12h11"/><circle cx="19" cy="12" r="2"/></svg>
+            <span>Day 1 driving route</span>
+        </a>
+        <button class="dock-button" id="nextDay" type="button" aria-label="Next day">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        </button>
+    </nav>
+
+    <div class="lightbox" id="photoLightbox" role="dialog" aria-modal="true" aria-label="Activity photo viewer" aria-hidden="true">
+        <button class="lightbox-close" type="button" aria-label="Close photo viewer">&times;</button>
+        <img id="lightboxImage" src="" alt="">
+    </div>
+
+    <script>
+        const days = Array.from(document.querySelectorAll('[data-trip-day]'));
+        const currentRoute = document.getElementById('currentRoute');
+        const previousDay = document.getElementById('previousDay');
+        const nextDay = document.getElementById('nextDay');
+        const packingToggle = document.getElementById('packingToggle');
+        const packingPanel = document.getElementById('packingPanel');
+        const packingItems = Array.from(document.querySelectorAll('[data-pack-item]'));
+        const packingCount = document.getElementById('packingCount');
+        const packingToggleCount = document.getElementById('packingToggleCount');
+        const packingProgress = document.querySelector('.packing-progress');
+        const packingProgressBar = document.querySelector('.packing-progress-bar');
+        const packingStorageKey = 'alpine-trip-packing';
+        let currentDayIndex = 0;
+
+        function updatePackingProgress() {
+            const packed = packingItems.filter(function(item) { return item.checked; }).length;
+            const total = packingItems.length;
+            packingCount.textContent = packed + ' of ' + total + ' items packed';
+            packingToggleCount.textContent = packed + ' / ' + total + ' packed';
+            packingProgress.setAttribute('aria-valuemax', total);
+            packingProgress.setAttribute('aria-valuenow', packed);
+            packingProgressBar.style.width = ((packed / total) * 100) + '%';
+        }
+
+        function savePackingState() {
+            const packedItems = packingItems.filter(function(item) { return item.checked; }).map(function(item) { return item.dataset.packItem; });
+            localStorage.setItem(packingStorageKey, JSON.stringify(packedItems));
+            updatePackingProgress();
+        }
+
+        try {
+            const savedItems = JSON.parse(localStorage.getItem(packingStorageKey) || '[]');
+            packingItems.forEach(function(item) { item.checked = savedItems.includes(item.dataset.packItem); });
+        } catch (error) {
+            localStorage.removeItem(packingStorageKey);
+        }
+
+        packingToggle.addEventListener('click', function() {
+            const isOpen = packingToggle.getAttribute('aria-expanded') === 'true';
+            packingToggle.setAttribute('aria-expanded', String(!isOpen));
+            packingPanel.hidden = isOpen;
+        });
+
+        packingItems.forEach(function(item) { item.addEventListener('change', savePackingState); });
+        document.getElementById('packingReset').addEventListener('click', function() {
+            packingItems.forEach(function(item) { item.checked = false; });
+            savePackingState();
+        });
+        updatePackingProgress();
+
+        function showDay(index) {
+            currentDayIndex = Math.max(0, Math.min(days.length - 1, index));
+            days[currentDayIndex].scrollIntoView({ behavior: 'smooth' });
+            updateDock();
+        }
+
+        function updateDock() {
+            const route = days[currentDayIndex].querySelector('.route-button');
+            currentRoute.href = route.href;
+            currentRoute.querySelector('span').textContent = 'Day ' + (currentDayIndex + 1) + ' driving route';
+            previousDay.disabled = currentDayIndex === 0;
+            nextDay.disabled = currentDayIndex === days.length - 1;
+        }
+
+        document.querySelectorAll('[data-day]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                showDay(days.indexOf(document.getElementById(button.dataset.day)));
+            });
+        });
+
+        previousDay.addEventListener('click', function() { showDay(currentDayIndex - 1); });
+        nextDay.addEventListener('click', function() { showDay(currentDayIndex + 1); });
+
+        const dayObserver = new IntersectionObserver(function(entries) {
+            const visibleDay = entries
+                .filter(function(entry) { return entry.isIntersecting; })
+                .sort(function(first, second) { return second.intersectionRatio - first.intersectionRatio; })[0];
+
+            if (visibleDay) {
+                currentDayIndex = days.indexOf(visibleDay.target);
+                updateDock();
+            }
+        }, { rootMargin: '-20% 0px -55% 0px', threshold: [0, 0.25, 0.5] });
+
+        days.forEach(function(day) { dayObserver.observe(day); });
+
+        document.querySelectorAll('.event[data-map]').forEach(function(event) {
+            const title = event.querySelector('h3').textContent.trim();
+            event.tabIndex = 0;
+            event.setAttribute('role', 'link');
+            event.setAttribute('aria-label', title + ' - open in Google Maps');
+
+            function openEventMap(interaction) {
+                if (interaction.target.closest('a')) return;
+                interaction.preventDefault();
+                const mapWindow = window.open(event.dataset.map, '_blank', 'noopener,noreferrer');
+                if (mapWindow) mapWindow.opener = null;
+            }
+
+            event.addEventListener('click', openEventMap);
+            event.addEventListener('keydown', function(interaction) {
+                if (interaction.key === 'Enter' || interaction.key === ' ') openEventMap(interaction);
+            });
+        });
+
+        const lightbox = document.getElementById('photoLightbox');
+        const lightboxImage = document.getElementById('lightboxImage');
+        const lightboxClose = lightbox.querySelector('.lightbox-close');
+        let photoTrigger = null;
+
+        function closeLightbox() {
+            lightbox.classList.remove('is-open');
+            lightbox.setAttribute('aria-hidden', 'true');
+            lightboxImage.src = '';
+            document.body.style.overflow = '';
+            if (photoTrigger) photoTrigger.focus();
+        }
+
+        document.querySelectorAll('.activity-thumb, .res-thumb').forEach(function(thumbnail) {
+            thumbnail.addEventListener('click', function() {
+                photoTrigger = thumbnail;
+                lightboxImage.src = thumbnail.dataset.full;
+                lightboxImage.alt = thumbnail.dataset.alt;
+                lightbox.classList.add('is-open');
+                lightbox.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                lightboxClose.focus();
+            });
+        });
+
+        document.querySelectorAll('.res-card').forEach(function(card) {
+            const restaurantLink = card.querySelector('.res-name');
+            card.tabIndex = 0;
+            card.setAttribute('role', 'link');
+            card.setAttribute('aria-label', restaurantLink.textContent.trim() + ' - open in Google Maps');
+
+            function openRestaurant(interaction) {
+                if (interaction.target.closest('a, button')) return;
+                interaction.preventDefault();
+                const mapWindow = window.open(restaurantLink.href, '_blank', 'noopener,noreferrer');
+                if (mapWindow) mapWindow.opener = null;
+            }
+
+            card.addEventListener('click', openRestaurant);
+            card.addEventListener('keydown', function(interaction) {
+                if (interaction.key === 'Enter' || interaction.key === ' ') openRestaurant(interaction);
+            });
+        });
+
+        lightboxClose.addEventListener('click', closeLightbox);
+        lightbox.addEventListener('click', function(interaction) {
+            if (interaction.target === lightbox) closeLightbox();
+        });
+        lightboxImage.addEventListener('click', function(interaction) { interaction.stopPropagation(); });
+        document.addEventListener('keydown', function(interaction) {
+            if (interaction.key === 'Escape' && lightbox.classList.contains('is-open')) closeLightbox();
+        });
+
+        updateDock();
+    </script>
+</body>
+</html>
