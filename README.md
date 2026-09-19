@@ -1,8 +1,8 @@
 # ✈️ Vacation Planning Workspace
 
-> 🧭 A reusable home for building organized, practical, and offline-friendly travel packages.
+> 🧭 A reusable home for building organized, phone-first, and offline-friendly travel packages.
 
-This workspace keeps each vacation self-contained while sharing one repeatable planning workflow. A trip package can include an interactive itinerary, route maps, packing lists, emergency information, images, and maintenance scripts.
+This workspace keeps each vacation self-contained while sharing one repeatable planning workflow. A trip package can include a mobile driving itinerary, route maps, activity photos, restaurant recommendations, persistent packing and ticket checklists, emergency information, and maintenance scripts.
 
 ## 🗂️ Workspace Structure
 
@@ -40,7 +40,7 @@ See <a href="SKILLS.md" target="_blank" rel="noopener noreferrer">SKILLS.md</a> 
 | Artifact | Purpose |
 | --- | --- |
 | `README.md` | 📝 Trip overview, maintained files, and trip-specific commands. |
-| `index.html` | 🗓️ Interactive day-by-day itinerary and primary entry point. |
+| `index.html` | 🗓️ Mobile day-by-day itinerary with Maps navigation, photos, recommendations, and saved checklists. |
 | `*.kml` or `*.kmz` | 🗺️ Categorized locations for Google My Maps or Google Earth. |
 | Packing list | 🎒 Clothing, equipment, documents, and traveler-specific supplies. |
 | Emergency guide | 🆘 Verified local contacts, medical resources, and critical phrases. |
@@ -69,15 +69,26 @@ Prefer official sources for opening hours, seasonal closures, road restrictions,
 
 ### 3. 🧱 Build
 
-Create readable, responsive travel documents with direct map links and clear daily logistics. Every link must open in a new tab or window and include `rel="noopener noreferrer"`. Keep offline assets embedded only when offline access is required; otherwise favor maintainable external resources.
+Create readable, responsive travel documents with direct map links and clear daily logistics. Link every itinerary event to its exact Google Maps destination, end each day at the correct lodging or final destination, and keep times above titles on narrow screens when columns would overlap. Every link must open in a new tab or window and include `rel="noopener noreferrer"`.
+
+Use three representative activity photos per day by default. Save local images at 1 MB or less, use stable 4:3 frames, and visually reject white borders, letterboxing, tiny subjects, or poor crops. Add a shared keyboard-accessible lightbox.
+
+Put restaurant recommendations in collapsed sections with exact Maps links, current rating, cuisine, price range, meal suitability, hours warnings, and matching venue photos. Add collapsed daily ticket checklists for transport, tolls, parking, rentals, admissions, and reservations, plus a packing checklist tailored to the weather and activities.
+
+Persist checklist progress with `localStorage`; mirror it to cookies when hosted over HTTP(S) and use `sessionStorage` only as a fallback. Keep all checklists collapsed by default and provide progress counts and reset controls.
 
 ### 4. 🧪 Validate
 
 - Confirm dates, route direction, lodging sequence, and reservation times.
 - Test itinerary links, navigation, images, keyboard controls, and mobile layouts.
 - Confirm every HTML anchor has `target="_blank"` and a `rel` containing both `noopener` and `noreferrer`.
+- Confirm every event opens the intended Maps destination without nested links triggering the row action.
+- Check three activity images per day, decoded dimensions, file sizes, crops, and lightbox behavior.
+- Expand restaurant and checklist sections and confirm there is no overlap, clipping, or horizontal overflow.
+- Verify packing and ticket counts, reload persistence, reset behavior, and collapsed defaults without destroying the traveler's saved state.
+- Confirm every paid transportation or entry item appears in the correct daily checklist with an official purchase link or on-site instruction.
 - Parse KML as XML and verify coordinates, styles, names, and map links.
-- Flag unverified prices, schedules, seasonal roads, and operating hours.
+- Flag unverified prices, ratings, schedules, closures, seasonal roads, and operating hours, and record the date checked.
 - Keep each trip's `README.md` current with its maintained files and commands.
 
 ## 🧰 Shared Resources

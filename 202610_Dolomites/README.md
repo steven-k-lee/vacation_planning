@@ -15,7 +15,7 @@ flowchart LR
 
 | File | Purpose |
 | --- | --- |
-| <a href="index.html" target="_blank" rel="noopener noreferrer">`index.html`</a> | 🗓️ Interactive day-by-day itinerary with logistics, lodging, activities, routes, restaurant cards, embedded photos, and image lightboxes. |
+| <a href="index.html" target="_blank" rel="noopener noreferrer">`index.html`</a> | 🗓️ Interactive day-by-day itinerary with logistics, lodging, activities, routes, expandable restaurant cards, ratings, cuisine and price badges, embedded photos, and image lightboxes. |
 | <a href="dolomites_road_trip_categorized.kml" target="_blank" rel="noopener noreferrer">`dolomites_road_trip_categorized.kml`</a> | 🗺️ Google Earth/My Maps placemarks grouped by day, with category icons, muted colors, descriptions, and Google Maps links. |
 | <a href="Dolomite%20Packing%20List.html" target="_blank" rel="noopener noreferrer">`Dolomite Packing List.html`</a> | 🎒 Trip-specific family packing list. |
 | <a href="Italy%20Emergency_Guide.html" target="_blank" rel="noopener noreferrer">`Italy Emergency_Guide.html`</a> | 🆘 Emergency contacts and travel-safety reference. |
@@ -29,6 +29,7 @@ flowchart LR
 - 🖨️ Built a responsive, printable five-day itinerary.
 - 🧭 Added daily logistics, route links, lodging, activities, warnings, and restaurant recommendations.
 - 📍 Linked restaurant names and map placemarks to Google Maps.
+- ⭐ Included rating, price, cuisine, and meal-suitability badges for restaurant recommendations.
 - 📸 Matched 20 restaurant thumbnails to their corresponding Google listings and embedded them for offline use.
 - ⌨️ Added mouse and keyboard lightbox support to itinerary and restaurant images.
 - 🔗 Made restaurant cards open their listings while thumbnail clicks remain dedicated to the lightbox.
@@ -62,3 +63,5 @@ Opening hours, seasonal lifts, mountain roads, toll systems, parking rules, pric
 ## ♻️ Reuse
 
 The workspace skill is stored at <a href="../.github/skills/travel-itinerary-builder/SKILL.md" target="_blank" rel="noopener noreferrer">`../.github/skills/travel-itinerary-builder/SKILL.md`</a>. See <a href="../SKILLS.md" target="_blank" rel="noopener noreferrer">`../SKILLS.md`</a> for examples and setup guidance. 🚀
+
+Future itinerary refreshes should use the shared phone-first standard: full-row Maps actions, three optimized activity images per day, explicit lodging handoffs, current restaurant metadata, and collapsed persistent packing and daily ticket checklists. This README describes the current Dolomites files; those newer controls should only be listed as completed here after they are added and browser-tested in this trip.
