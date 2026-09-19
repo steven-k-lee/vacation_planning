@@ -228,6 +228,32 @@
             font-size: 0.83rem;
         }
 
+        .ticket-plan { margin-top: 18px; overflow: hidden; border: 1px solid #dfb04d; border-left: 5px solid #b9552d; border-radius: 5px; background: #fffaf0; box-shadow: 0 8px 20px rgba(104, 75, 18, 0.1); }
+        .ticket-plan summary { display: flex; min-height: 58px; align-items: center; justify-content: space-between; gap: 12px; padding: 11px 13px; background: #ffedbd; color: #59370d; cursor: pointer; font-family: "Trebuchet MS", sans-serif; font-size: 0.94rem; font-weight: 700; list-style: none; }
+        .ticket-plan summary::-webkit-details-marker { display: none; }
+        .ticket-plan summary:hover { background: #ffe5a3; }
+        .ticket-plan summary:focus-visible { outline: 3px solid var(--forest-light); outline-offset: -3px; }
+        .ticket-plan[open] summary { border-bottom: 1px solid #dfb04d; }
+        .ticket-summary-title { display: flex; min-width: 0; align-items: center; gap: 9px; }
+        .ticket-toggle-icon { display: grid; width: 28px; height: 28px; flex: 0 0 28px; place-items: center; border-radius: 50%; background: #b9552d; color: white; font-size: 1.15rem; line-height: 1; transition: transform 180ms ease; }
+        .ticket-plan[open] .ticket-toggle-icon { transform: rotate(45deg); }
+        .ticket-count { flex: 0 0 auto; padding: 4px 7px; border-radius: 999px; background: #684b12; color: white; font-size: 0.68rem; text-transform: uppercase; }
+        .ticket-plan-body { padding: 16px 14px; }
+        .ticket-list { display: grid; gap: 12px; margin: 0; padding: 0; list-style: none; }
+        .ticket-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr); gap: 8px; padding-left: 11px; border-left: 3px solid #b8cbc2; }
+        .ticket-check { width: 18px; height: 18px; margin: 2px 0 0; accent-color: var(--forest); cursor: pointer; }
+        .ticket-copy { min-width: 0; }
+        .ticket-copy label { cursor: pointer; }
+        .ticket-list li:has(.ticket-check:checked) { border-left-color: var(--forest-light); }
+        .ticket-list li:has(.ticket-check:checked) .ticket-copy > label strong { color: var(--muted); text-decoration: line-through; }
+        .ticket-when { display: block; margin-bottom: 2px; color: var(--amber-ink); font-family: "Trebuchet MS", sans-serif; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; }
+        .ticket-list strong { color: var(--ink); }
+        .ticket-list p { margin: 3px 0 5px; color: #43504c; font-size: 0.82rem; line-height: 1.4; }
+        .ticket-list a { font-family: "Trebuchet MS", sans-serif; font-size: 0.78rem; font-weight: 700; }
+        .ticket-note { margin: 12px 0 0; color: var(--muted); font-family: "Trebuchet MS", sans-serif; font-size: 0.74rem; line-height: 1.4; }
+        .ticket-actions { display: flex; justify-content: flex-end; margin-top: 12px; }
+        .ticket-reset { padding: 7px 10px; border: 1px solid var(--line); border-radius: 4px; background: white; color: var(--forest); cursor: pointer; font-family: "Trebuchet MS", sans-serif; font-size: 0.72rem; font-weight: 700; }
+
         .activity-photos {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -345,7 +371,7 @@
         .res-thumb:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
         .res-info { min-width: 0; padding: 10px; }
         .res-name { display: block; overflow: hidden; color: var(--forest); font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
-        .res-meta { margin: 4px 0; color: var(--muted); font-family: "Trebuchet MS", sans-serif; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; }
+        .res-meta { margin: 4px 0; color: var(--muted); font-family: "Trebuchet MS", sans-serif; font-size: 0.7rem; font-weight: 700; line-height: 1.4; text-transform: uppercase; }
         .res-hours { margin-bottom: 4px; color: var(--amber-ink); font-family: "Trebuchet MS", sans-serif; font-size: 0.7rem; }
         .res-desc { margin: 0; color: #43504c; font-size: 0.78rem; line-height: 1.35; }
 
@@ -575,6 +601,19 @@
                     Open master route
                 </a>
                 <div class="callout"><strong>Confirm before departure:</strong> Rail and funicular timetables, Harder Kulm's final descent, and late-October mountain conditions. Prices below are estimates from the source itinerary.</div>
+                <details class="ticket-plan" data-ticket-plan>
+                    <summary><span class="ticket-summary-title"><span class="ticket-toggle-icon" aria-hidden="true">+</span>Tickets &amp; purchases</span><span class="ticket-count" data-ticket-count>0 / 4 done</span></summary>
+                    <div class="ticket-plan-body">
+                        <ol class="ticket-list">
+                            <li><input class="ticket-check" id="ticket-ch-vignette" type="checkbox" data-ticket-item="ch-vignette"><div class="ticket-copy"><label for="ticket-ch-vignette"><span class="ticket-when">Buy before departure</span><strong>Swiss motorway vignette</strong></label><p>Enter the car's registration country and plate number, buy the 2026 e-vignette for CHF 40, and save the receipt before using Swiss motorways.</p><a href="https://via.admin.ch/shop/dashboard" target="_blank" rel="noopener noreferrer">Buy from the Swiss government</a></div></li>
+                            <li><input class="ticket-check" id="ticket-ch-rail" type="checkbox" data-ticket-item="ch-rail"><div class="ticket-copy"><label for="ticket-ch-rail"><span class="ticket-when">Buy at Lauterbrunnen station</span><strong>Lauterbrunnen–Kleine Scheidegg return rail ticket</strong></label><p>Use the ticket machine or counter and select a same-day return via Wengen. Keep the ticket available for every train segment.</p><a href="https://www.jungfrau.ch/en-gb/plan-book/timetable/" target="_blank" rel="noopener noreferrer">Check Jungfrau timetable and fares</a></div></li>
+                            <li><input class="ticket-check" id="ticket-harder-kulm" type="checkbox" data-ticket-item="harder-kulm"><div class="ticket-copy"><label for="ticket-harder-kulm"><span class="ticket-when">Buy online before the afternoon drive</span><strong>Harder Railway return ticket</strong></label><p>Select Interlaken–Harder Kulm return for October 31 and confirm the final descent before payment.</p><a href="https://top-of-travel.jungfrau.ch/en/booking/harder-kulm/start" target="_blank" rel="noopener noreferrer">Buy the official Harder Kulm ticket</a></div></li>
+                            <li><input class="ticket-check" id="ticket-day1-parking" type="checkbox" data-ticket-item="day1-parking"><div class="ticket-copy"><label for="ticket-day1-parking"><span class="ticket-when">Pay on site</span><strong>Lauterbrunnen and Interlaken parking</strong></label><p>Take a ticket or follow the garage payment instructions; pay before returning to the car.</p></div></li>
+                        </ol>
+                        <p class="ticket-note">No admission ticket is needed for Wengen village, the church viewpoint, Staubbach Falls, or the Two Lakes Bridge.</p>
+                        <div class="ticket-actions"><button class="ticket-reset" type="button" data-ticket-reset>Reset checklist</button></div>
+                    </div>
+                </details>
                 <div class="activity-photos" aria-label="Day 1 activity photos">
                     <button class="activity-thumb" type="button" data-full="assets/wengen.jpg" data-alt="Lauterbrunnen valley viewed from Wengen" data-source="https://www.travelandleisure.com/thmb/2_MAUJuTkM9uSyyM_EJI4CJeGDo=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/TAL-lead-image-WENGENSW0825-20aa26348297433eaae0ad2ea477c50f.jpg" aria-label="Enlarge view from Wengen"><img src="assets/wengen.jpg" alt="Lauterbrunnen valley viewed from Wengen" width="1200" height="800" loading="lazy"><span>Wengen</span></button>
                     <button class="activity-thumb" type="button" data-full="assets/kleine-scheidegg.jpg" data-alt="Kleine Scheidegg railway station in the Alps" data-source="https://www.interlaken.swiss/fileadmin/_processed_/a/7/csm_kleine-scheidegg-bahnhof-winter-skiregion_c2fa21f0a8.jpg" aria-label="Enlarge photo of Kleine Scheidegg"><img src="assets/kleine-scheidegg.jpg" alt="Kleine Scheidegg railway station in the Alps" width="900" height="601" loading="lazy"><span>Kleine Scheidegg</span></button>
@@ -599,15 +638,15 @@
                     <div class="restaurant-list">
                         <article class="res-card">
                             <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSSFuUMjMWgTCStSxC-feEx8fbEvh-aaq5zBC2VrtzRw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSSFuUMjMWgTCStSxC-feEx8fbEvh-aaq5zBC2VrtzRw&amp;s=10" data-alt="Chalet Bar at Kleine Scheidegg" aria-label="Enlarge photo of Chalet Bar"></button>
-                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Chalet+Bar+Kleine+Scheidegg" target="_blank" rel="noopener noreferrer">Chalet Bar</a><div class="res-meta">Swiss · Lunch</div><div class="res-hours">Hours may change</div><p class="res-desc">Convenient mountain lunch stop already built into the Kleine Scheidegg visit.</p></div>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Chalet+Bar+Kleine+Scheidegg" target="_blank" rel="noopener noreferrer">Chalet Bar</a><div class="res-meta">4.7/5 rating · Swiss/European pub · CHF 20–30</div><div class="res-hours">Hours may change</div><p class="res-desc">Convenient mountain lunch stop already built into the Kleine Scheidegg visit.</p></div>
                         </article>
                         <article class="res-card">
                             <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk6eBVoFlPQ348KiI1SAx9edbwYXuboRKv4MvTDq_-Gg&amp;s')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSk6eBVoFlPQ348KiI1SAx9edbwYXuboRKv4MvTDq_-Gg&amp;s" data-alt="Restaurant Schützen in Lauterbrunnen" aria-label="Enlarge photo of Restaurant Schützen"></button>
-                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Restaurant+Sch%C3%BCtzen+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Restaurant Schützen</a><div class="res-meta">Swiss · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned fondue dinner near Hotel Oberland after returning from Interlaken.</p></div>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Restaurant+Sch%C3%BCtzen+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Restaurant Schützen</a><div class="res-meta">4.0/5 rating · Swiss/European · CHF 20–40</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned fondue dinner near Hotel Oberland after returning from Interlaken.</p></div>
                         </article>
                         <article class="res-card">
                             <button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VVHJQYevUXzBb5Il3TMitNnUgExIVlD_pvQ7WunChw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR7VVHJQYevUXzBb5Il3TMitNnUgExIVlD_pvQ7WunChw&amp;s=10" data-alt="Hotel Oberland restaurant in Lauterbrunnen" aria-label="Enlarge photo of Hotel Oberland restaurant"></button>
-                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Hotel+Oberland+Restaurant+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Hotel Oberland Restaurant</a><div class="res-meta">Swiss · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A practical alternative at the lodging, useful if the evening schedule runs late.</p></div>
+                            <div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Hotel+Oberland+Restaurant+Lauterbrunnen" target="_blank" rel="noopener noreferrer">Hotel Oberland Restaurant</a><div class="res-meta">4.3/5 rating · Alpine Swiss/European · CHF 30–40</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A practical alternative at the lodging, useful if the evening schedule runs late.</p></div>
                         </article>
                     </div>
                 </details>
@@ -624,6 +663,19 @@
                     Open master route
                 </a>
                 <div class="callout"><strong>Timing risk:</strong> Castle access, Marienbrücke, carriage service, and E-bike availability are weather-dependent. Sunset is around 4:50 PM; confirm the rental return time and bring lights.</div>
+                <details class="ticket-plan" data-ticket-plan>
+                    <summary><span class="ticket-summary-title"><span class="ticket-toggle-icon" aria-hidden="true">+</span>Tickets &amp; reservations</span><span class="ticket-count" data-ticket-count>0 / 4 done</span></summary>
+                    <div class="ticket-plan-body">
+                        <ol class="ticket-list">
+                            <li><input class="ticket-check" id="ticket-at-vignette" type="checkbox" data-ticket-item="at-vignette"><div class="ticket-copy"><label for="ticket-at-vignette"><span class="ticket-when">Buy before entering Austria</span><strong>Austrian one-day digital vignette</strong></label><p>Choose a one-day car vignette, enter the license plate and registration country carefully, and set November 1 as the validity date.</p><a href="https://shop.asfinag.at/en/" target="_blank" rel="noopener noreferrer">Buy from the official ASFINAG shop</a></div></li>
+                            <li><input class="ticket-check" id="ticket-neuschwanstein" type="checkbox" data-ticket-item="neuschwanstein"><div class="ticket-copy"><label for="ticket-neuschwanstein"><span class="ticket-when">Reserve weeks ahead</span><strong>Neuschwanstein timed-entry ticket</strong></label><p>Book the November 1 guided tour near 2:30 PM. Save the ticket offline and arrive in Hohenschwangau 1.5–2 hours before admission.</p><a href="https://shop.ticket-center-hohenschwangau.de/Shop/Index/en/39901" target="_blank" rel="noopener noreferrer">Buy from the official Ticket Center</a></div></li>
+                            <li><input class="ticket-check" id="ticket-bike-fuessen" type="checkbox" data-ticket-item="bike-fuessen"><div class="ticket-copy"><label for="ticket-bike-fuessen"><span class="ticket-when">Reserve now</span><strong>BIKE FÜSSEN E-bikes</strong></label><p>Book the Schwangau location at Gipsmühlweg 5 for a 3:45 PM pickup, confirm lights and the return deadline, then save the confirmation.</p><a href="https://fareharbor.com/embeds/book/bikefuessen/?full-items=yes" target="_blank" rel="noopener noreferrer">Reserve bikes online</a> · <a href="tel:+491741825489" target="_blank" rel="noopener noreferrer">Call +49 174 1825489</a> · <a href="mailto:bikefuessen@gmail.com" target="_blank" rel="noopener noreferrer">Email Bike Füssen</a></div></li>
+                            <li><input class="ticket-check" id="ticket-day2-onsite" type="checkbox" data-ticket-item="day2-onsite"><div class="ticket-copy"><label for="ticket-day2-onsite"><span class="ticket-when">Pay on site</span><strong>P1–P4 parking and horse carriage</strong></label><p>Pay for parking in Hohenschwangau. Pay the driver €8 uphill or €4 downhill and carry euros in cash; service is weather-dependent and cannot be reserved.</p><a href="https://www.hohenschwangau.de/en/visitor-information/how-to-reach-the-castles" target="_blank" rel="noopener noreferrer">Check official castle access guidance</a></div></li>
+                        </ol>
+                        <p class="ticket-note">Marienbrücke has no separate admission fee, but access can close because of weather or maintenance.</p>
+                        <div class="ticket-actions"><button class="ticket-reset" type="button" data-ticket-reset>Reset checklist</button></div>
+                    </div>
+                </details>
                 <div class="activity-photos" aria-label="Day 2 activity photos">
                     <button class="activity-thumb" type="button" data-full="assets/neuschwanstein.jpg" data-alt="Neuschwanstein Castle viewed from the east" data-source="https://www.neuschwanstein.de/bilder/schloss/neuschwanstein_ostansicht_www.kreativ-instinkt.de_DI016842-790.jpg" aria-label="Enlarge photo of Neuschwanstein Castle"><img src="assets/neuschwanstein.jpg" alt="Neuschwanstein Castle viewed from the east" width="790" height="450" loading="lazy"><span>Neuschwanstein</span></button>
                     <button class="activity-thumb" type="button" data-full="assets/alpsee.jpg" data-alt="Alpsee lake near Hohenschwangau" data-source="https://www.hohenschwangau.de/fileadmin/user_upload/DSC01338.JPG" aria-label="Enlarge photo of Alpsee"><img src="assets/alpsee.jpg" alt="Alpsee lake near Hohenschwangau" width="1600" height="1067" loading="lazy"><span>Alpsee</span></button>
@@ -645,9 +697,9 @@
                 <details>
                     <summary>Restaurant recommendations · Füssen</summary>
                     <div class="restaurant-list">
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10" data-alt="Gasthof Krone restaurant in Füssen" aria-label="Enlarge photo of Gasthof Krone"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Gasthof+Krone+F%C3%BCssen" target="_blank" rel="noopener noreferrer">Gasthof Krone</a><div class="res-meta">Bavarian · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned old-town tavern dinner after the Alpsee ride.</p></div></article>
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10" data-alt="Madame Plüsch restaurant in Füssen" aria-label="Enlarge photo of Madame Plüsch"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=7040114834011529630" target="_blank" rel="noopener noreferrer">Madame Plüsch</a><div class="res-meta">Bavarian · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">Historic, atmospheric alternative for regional dishes in central Füssen.</p></div></article>
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10" data-alt="Gasthaus zum Schwanen in Füssen" aria-label="Enlarge photo of Gasthaus zum Schwanen"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=5407654798807726445" target="_blank" rel="noopener noreferrer">Gasthaus zum Schwanen</a><div class="res-meta">Traditional · Dinner</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A cozy old-town choice when traditional German comfort food is the priority.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSJz9-MeVcpMpvhCu1ZzNsr3RC8srgnSfPq7QMDs19ag&amp;s=10" data-alt="Gasthof Krone restaurant in Füssen" aria-label="Enlarge photo of Gasthof Krone"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Gasthof+Krone+F%C3%BCssen" target="_blank" rel="noopener noreferrer">Gasthof Krone</a><div class="res-meta">3.7/5 rating · Bavarian/German · About €20–30</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">The planned old-town tavern dinner after the Alpsee ride.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTj2BQWLJg20TTKuPzsglEB7p9eD666LoaNdpuex9uoVw&amp;s=10" data-alt="Madame Plüsch restaurant in Füssen" aria-label="Enlarge photo of Madame Plüsch"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=7040114834011529630" target="_blank" rel="noopener noreferrer">Madame Plüsch</a><div class="res-meta">4.6/5 rating · German/European · €20–60</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">Historic, atmospheric alternative for regional dishes in central Füssen.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSlvcgIOEGfwkjIWFR1XS8jLPTk47Xyep6LE9jWmT0fCw&amp;s=10" data-alt="Gasthaus zum Schwanen in Füssen" aria-label="Enlarge photo of Gasthaus zum Schwanen"></button><div class="res-info"><a class="res-name" href="https://maps.google.com/maps?cid=5407654798807726445" target="_blank" rel="noopener noreferrer">Gasthaus zum Schwanen</a><div class="res-meta">4.7/5 rating · German/European · €20–30</div><div class="res-hours">Hours and reservations unverified</div><p class="res-desc">A cozy old-town choice when traditional German comfort food is the priority.</p></div></article>
                     </div>
                 </details>
             </div>
@@ -663,6 +715,17 @@
                     Open master route
                 </a>
                 <div class="callout"><strong>Tight turnaround:</strong> The source allows 40 minutes for a 10:00 AM palace tour and assumes the café opens at 10:40 AM. Confirm both official schedules before relying on the 11:00 AM departure.</div>
+                <details class="ticket-plan" data-ticket-plan>
+                    <summary><span class="ticket-summary-title"><span class="ticket-toggle-icon" aria-hidden="true">+</span>Tickets &amp; purchases</span><span class="ticket-count" data-ticket-count>0 / 2 done</span></summary>
+                    <div class="ticket-plan-body">
+                        <ol class="ticket-list">
+                            <li><input class="ticket-check" id="ticket-linderhof" type="checkbox" data-ticket-item="linderhof"><div class="ticket-copy"><label for="ticket-linderhof"><span class="ticket-when">Buy online before the trip</span><strong>Linderhof Palace admission</strong></label><p>Buy the €11 adult palace ticket for November 2 and select a time compatible with the planned 10:00 AM guided visit. Save the ticket offline; reduced or free tickets require original proof.</p><a href="https://ticketshop-schlosslinderhof.de/en" target="_blank" rel="noopener noreferrer">Buy from the official Linderhof shop</a></div></li>
+                            <li><input class="ticket-check" id="ticket-day3-onsite" type="checkbox" data-ticket-item="day3-onsite"><div class="ticket-copy"><label for="ticket-day3-onsite"><span class="ticket-when">Fallback and on-site payment</span><strong>Palace ticket desk and parking</strong></label><p>If online inventory is unavailable, arrive before the 9:30 AM winter ticket-office opening and buy at the cash desk. Pay the parking charge on site.</p><a href="https://www.schlosslinderhof.de/englisch/tourist/admiss.htm" target="_blank" rel="noopener noreferrer">Review official admission details</a></div></li>
+                        </ol>
+                        <p class="ticket-note">No admission ticket is needed for the Oberammergau village walk. Germany has no general passenger-car motorway vignette for the return to Wiesbaden.</p>
+                        <div class="ticket-actions"><button class="ticket-reset" type="button" data-ticket-reset>Reset checklist</button></div>
+                    </div>
+                </details>
                 <div class="activity-photos" aria-label="Day 3 activity photos">
                     <button class="activity-thumb" type="button" data-full="assets/linderhof.jpg" data-alt="Linderhof Palace and formal gardens" data-source="https://www.schlosslinderhof.de/bilder/schloss/linderhof575b.jpg" aria-label="Enlarge photo of Linderhof Palace"><img src="assets/linderhof.jpg" alt="Linderhof Palace and formal gardens" width="575" height="385" loading="lazy"><span>Linderhof</span></button>
                     <button class="activity-thumb" type="button" data-full="assets/oberammergau.jpg" data-alt="Traditional painted house in Oberammergau" data-source="https://www.ammergauer-alpen.de/en/fileadmin/_processed_/4/e/csm_Ludwig_Thoma-Haus-Stephan_de_Paly_0f30c332c2.jpg" aria-label="Enlarge photo of Oberammergau painted houses"><img src="assets/oberammergau.jpg" alt="Traditional painted house in Oberammergau" width="1600" height="1067" loading="lazy"><span>Oberammergau</span></button>
@@ -681,9 +744,9 @@
                 <details>
                     <summary>Restaurant recommendations · Oberammergau</summary>
                     <div class="restaurant-list">
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10" data-alt="Eiscafé Paradiso in Oberammergau" aria-label="Enlarge photo of Eiscafé Paradiso"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Eiscaf%C3%A9+Paradiso+Oberammergau" target="_blank" rel="noopener noreferrer">Eiscafé Paradiso</a><div class="res-meta">Café · Quick stop</div><div class="res-hours">Stated 10:40 opening unverified</div><p class="res-desc">The itinerary's quick gelato stop before the return drive.</p></div></article>
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10" data-alt="Ammergauer Maxbräu in Oberammergau" aria-label="Enlarge photo of Ammergauer Maxbräu"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Ammergauer+Maxbr%C3%A4u+Oberammergau" target="_blank" rel="noopener noreferrer">Ammergauer Maxbräu</a><div class="res-meta">Bavarian · Meal</div><div class="res-hours">Hours may change</div><p class="res-desc">A fuller Bavarian meal option if the tightly scheduled return can be relaxed.</p></div></article>
-                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10" data-alt="Mundart restaurant in Oberammergau" aria-label="Enlarge photo of Mundart"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Mundart+Restaurant+Oberammergau" target="_blank" rel="noopener noreferrer">Mundart</a><div class="res-meta">Regional · Meal</div><div class="res-hours">Hours may change</div><p class="res-desc">A contemporary regional alternative near the center of Oberammergau.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQisQ02edqvu9muP2fOWTfdNYPJULraWHv5ZmSr6j_LFQ&amp;s=10" data-alt="Eiscafé Paradiso in Oberammergau" aria-label="Enlarge photo of Eiscafé Paradiso"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Eiscaf%C3%A9+Paradiso+Oberammergau" target="_blank" rel="noopener noreferrer">Eiscafé Paradiso</a><div class="res-meta">4.6/5 rating · Italian café/gelato · Under €20</div><div class="res-hours">Stated 10:40 opening unverified</div><p class="res-desc">The itinerary's quick gelato stop before the return drive.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSKX2d4g3eFvfE2Nn3MztPA0tUXy3AaKC6T15c5nlU1aw&amp;s=10" data-alt="Ammergauer Maxbräu in Oberammergau" aria-label="Enlarge photo of Ammergauer Maxbräu"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Ammergauer+Maxbr%C3%A4u+Oberammergau" target="_blank" rel="noopener noreferrer">Ammergauer Maxbräu</a><div class="res-meta">4.4/5 rating · Bavarian brewpub · €20–30</div><div class="res-hours">Hours may change</div><p class="res-desc">A fuller Bavarian meal option if the tightly scheduled return can be relaxed.</p></div></article>
+                        <article class="res-card"><button class="res-thumb" type="button" style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10')" data-full="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTopniMGQAsgnYa65xvfj72MjORPP2_7o5xPUKFq3RMyg&amp;s=10" data-alt="Mundart restaurant in Oberammergau" aria-label="Enlarge photo of Mundart"></button><div class="res-info"><a class="res-name" href="https://www.google.com/maps/search/?api=1&amp;query=Mundart+Restaurant+Oberammergau" target="_blank" rel="noopener noreferrer">Mundart</a><div class="res-meta">4.8/5 rating · Modern Bavarian · €50–60</div><div class="res-hours">Google lists this venue as permanently closed</div><p class="res-desc">Previously a contemporary regional option near central Oberammergau; choose another venue.</p></div></article>
                     </div>
                 </details>
             </div>
@@ -703,7 +766,7 @@
         </section>
     </main>
 
-    <footer>Built from the source itinerary. Operating hours, prices, reservations, lodging in Füssen, and weather-sensitive access remain unverified as of September 19, 2026.</footer>
+    <footer>Built from the source itinerary. Restaurant data and official ticket guidance were checked September 19, 2026; approximate ranges are labeled. Operating hours, reservations, lodging in Füssen, and weather-sensitive access remain subject to change.</footer>
 
     <nav class="mobile-dock" aria-label="Current day driving controls">
         <button class="dock-button" id="previousDay" type="button" aria-label="Previous day">
@@ -736,7 +799,42 @@
         const packingProgress = document.querySelector('.packing-progress');
         const packingProgressBar = document.querySelector('.packing-progress-bar');
         const packingStorageKey = 'alpine-trip-packing';
+        const ticketPlans = Array.from(document.querySelectorAll('[data-ticket-plan]'));
+        const ticketItems = Array.from(document.querySelectorAll('[data-ticket-item]'));
+        const ticketStorageKey = 'alpine-trip-tickets';
         let currentDayIndex = 0;
+
+        function getCookie(name) {
+            const prefix = encodeURIComponent(name) + '=';
+            const cookie = document.cookie.split('; ').find(function(item) { return item.startsWith(prefix); });
+            return cookie ? decodeURIComponent(cookie.slice(prefix.length)) : null;
+        }
+
+        function readChecklistState(key) {
+            let savedState = null;
+            try { savedState = localStorage.getItem(key); } catch (error) {}
+            if (!savedState && location.protocol !== 'file:') savedState = getCookie(key);
+            if (!savedState) {
+                try { savedState = sessionStorage.getItem(key); } catch (error) {}
+            }
+
+            try {
+                const parsedState = JSON.parse(savedState || '[]');
+                return Array.isArray(parsedState) ? parsedState : [];
+            } catch (error) {
+                return [];
+            }
+        }
+
+        function saveChecklistState(key, completedItems) {
+            const savedState = JSON.stringify(completedItems);
+            try { localStorage.setItem(key, savedState); } catch (error) {}
+            try { sessionStorage.setItem(key, savedState); } catch (error) {}
+            if (location.protocol !== 'file:') {
+                const secure = location.protocol === 'https:' ? '; Secure' : '';
+                document.cookie = encodeURIComponent(key) + '=' + encodeURIComponent(savedState) + '; Max-Age=31536000; Path=/; SameSite=Lax' + secure;
+            }
+        }
 
         function updatePackingProgress() {
             const packed = packingItems.filter(function(item) { return item.checked; }).length;
@@ -750,16 +848,12 @@
 
         function savePackingState() {
             const packedItems = packingItems.filter(function(item) { return item.checked; }).map(function(item) { return item.dataset.packItem; });
-            localStorage.setItem(packingStorageKey, JSON.stringify(packedItems));
+            saveChecklistState(packingStorageKey, packedItems);
             updatePackingProgress();
         }
 
-        try {
-            const savedItems = JSON.parse(localStorage.getItem(packingStorageKey) || '[]');
-            packingItems.forEach(function(item) { item.checked = savedItems.includes(item.dataset.packItem); });
-        } catch (error) {
-            localStorage.removeItem(packingStorageKey);
-        }
+        const savedItems = readChecklistState(packingStorageKey);
+        packingItems.forEach(function(item) { item.checked = savedItems.includes(item.dataset.packItem); });
 
         packingToggle.addEventListener('click', function() {
             const isOpen = packingToggle.getAttribute('aria-expanded') === 'true';
@@ -773,6 +867,32 @@
             savePackingState();
         });
         updatePackingProgress();
+
+        function updateTicketProgress() {
+            ticketPlans.forEach(function(plan) {
+                const planItems = Array.from(plan.querySelectorAll('[data-ticket-item]'));
+                const completed = planItems.filter(function(item) { return item.checked; }).length;
+                plan.querySelector('[data-ticket-count]').textContent = completed + ' / ' + planItems.length + ' done';
+            });
+        }
+
+        function saveTicketState() {
+            const completedItems = ticketItems.filter(function(item) { return item.checked; }).map(function(item) { return item.dataset.ticketItem; });
+            saveChecklistState(ticketStorageKey, completedItems);
+            updateTicketProgress();
+        }
+
+        const savedTickets = readChecklistState(ticketStorageKey);
+        ticketItems.forEach(function(item) { item.checked = savedTickets.includes(item.dataset.ticketItem); });
+
+        ticketItems.forEach(function(item) { item.addEventListener('change', saveTicketState); });
+        document.querySelectorAll('[data-ticket-reset]').forEach(function(button) {
+            button.addEventListener('click', function() {
+                button.closest('[data-ticket-plan]').querySelectorAll('[data-ticket-item]').forEach(function(item) { item.checked = false; });
+                saveTicketState();
+            });
+        });
+        updateTicketProgress();
 
         function showDay(index) {
             currentDayIndex = Math.max(0, Math.min(days.length - 1, index));
